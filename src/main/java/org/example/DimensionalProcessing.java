@@ -1,12 +1,31 @@
 package org.example;
+
 import java.io.*;
 import java.sql.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
-
-public class DimensionsToTables {
-    public static void main(String[] args){
-        String xmlFile = "/Users/boppanavenkatesh/Desktop/XML Practice/DM Instance.xml";
+public class DimensionalProcessing {
+    public DimensionalProcessing(){}
+    public boolean CreateMetaDT(){
+        String url = "jdbc:mysql://localhost:3306/DataModeling";
+        String username = "root"; // replace with your username
+        String password = "KVrsmck@21"; // replace with your password
+        String sql = "CREATE TABLE DimensionTables " +
+                "(id INT NOT NULL AUTO_INCREMENT, " +
+                " DimensionTable VARCHAR(255) NOT NULL UNIQUE, " +
+                " Pri_Key VARCHAR(255), " +
+                " PRIMARY KEY ( id ))";
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
+            System.out.println("Table created successfully");
+            return true;
+        } catch (SQLException e) {
+            System.out.println(sql+" "+e.getMessage());
+            return false;
+        }
+    }
+    public boolean GenerateDTs(String xmlFile){
         String url = "jdbc:mysql://localhost:3306/DataModeling";
         String username = "root"; // replace with your username
         String password = "KVrsmck@21"; // replace with your password
@@ -65,8 +84,11 @@ public class DimensionsToTables {
 
             }
             System.out.println("[Build Ended ...]");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
+
 }
