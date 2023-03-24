@@ -11,9 +11,6 @@ public class DimensionalProcessing {
     String metaTable = "DimensionTables";
     public DimensionalProcessing(){}
     public boolean CreateMetaDT(){
-        String url = "jdbc:mysql://localhost:3306/DataModeling";
-        String username = "root"; // replace with your username
-        String password = "KVrsmck@21"; // replace with your password
         String sql = "CREATE TABLE DimensionTables " +
                 "(id INT NOT NULL AUTO_INCREMENT, " +
                 " DimensionTable VARCHAR(255) NOT NULL UNIQUE, " +
