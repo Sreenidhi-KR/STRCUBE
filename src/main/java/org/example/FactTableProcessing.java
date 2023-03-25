@@ -26,12 +26,12 @@ public class FactTableProcessing {
             Document doc = dBuilder.parse(new File(xmlFile));
             doc.getDocumentElement().normalize();
 
-            NodeList dimensionTableList = doc.getElementsByTagName("DimensionTable");
+            NodeList dimensionTableList = doc.getElementsByTagName("DimensionVariableKey");
             String[] dimensionTableNames = new String[dimensionTableList.getLength()];
 
             for(int i=0;i<dimensionTableList.getLength();i++){
                 Element dimensionTable = (Element) dimensionTableList.item(i);
-                dimensionTableNames[i] = dimensionTable.getAttribute("name");
+                dimensionTableNames[i] = dimensionTable.getAttribute("DimensionTable");
 //                System.out.println(dimensionTableNames[i]);
 //                System.out.println(factVariableList.item(i).getAttribute());
             }

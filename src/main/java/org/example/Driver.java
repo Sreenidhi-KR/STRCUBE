@@ -4,7 +4,7 @@ public class Driver {
     public static void main(String[] args){
         DimensionalProcessing Dimproc = new DimensionalProcessing();
         Dimproc.CreateMetaDT();
-        String workingDir = "/home/hansal/Downloads/dimensions";
+        String workingDir = "./dimensions";
         String xmlFileName = "/DM Instance.xml";
         Dimproc.GenerateDTs(workingDir, xmlFileName);
         FactTableProcessing factTableProcessing=new FactTableProcessing();

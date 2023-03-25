@@ -18,10 +18,10 @@
           </Fileproperties>
           <FileContents>
             <DimensionVariableKeys>
-              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="product">PRODUCTKEY</DimensionVariableKey>
-              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="reportingdate">TIMEKEY</DimensionVariableKey>
-              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="customer">CUSTOMERKEY</DimensionVariableKey>
-              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="salesperson">SALESPERSONKEY</DimensionVariableKey>
+              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="PRODUCT">PRODUCTKEY</DimensionVariableKey>
+              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="REPORTINGDATE">TIMEKEY</DimensionVariableKey>
+              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="CUSTOMER">CUSTOMERKEY</DimensionVariableKey>
+              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="SALESPERSON">SALESPERSONKEY</DimensionVariableKey>
             </DimensionVariableKeys>
             <FactVariables>
               <FactVariable type="DECIMAL" property="NOT NULL">ORDER_VALUE</FactVariable>
