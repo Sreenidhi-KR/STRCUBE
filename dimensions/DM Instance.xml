@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SDatabase xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <StreamProperties>
+    <StreamHub>
+      <DataSources>
+        <DataSource DS_id="DS-01">
+          <WindowStorageProperties>
+            <size units="rows">150</size>
+            <time units="seconds">60</time>
+            <type>sliding</type>
+            <origin>latest</origin>
+          </WindowStorageProperties>
+          <Fileproperties>
+            <FilePath>stream</FilePath>
+            <FileType>.csv</FileType>
+            <FileMode>read</FileMode>
+            <FileAppend>true</FileAppend>
+          </Fileproperties>
+          <FileContents>
+            <DimensionVariableKeys>
+              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="product">PRODUCTKEY</DimensionVariableKey>
+              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="reportingdate">TIMEKEY</DimensionVariableKey>
+              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="customer">CUSTOMERKEY</DimensionVariableKey>
+              <DimensionVariableKey type="VARCHAR(255)" DimensionTable="salesperson">SALESPERSONKEY</DimensionVariableKey>
+            </DimensionVariableKeys>
+            <FactVariables>
+              <FactVariable type="DECIMAL" property="NOT NULL">ORDER_VALUE</FactVariable>
+              <FactVariable type="DECIMAL" property="NOT NULL">COST_VALUE</FactVariable>
+              <FactVariable type="DECIMAL" property="NOT NULL">SALE_UNITS</FactVariable>
+            </FactVariables>
+          </FileContents>
+        </DataSource>
+      </DataSources>
+    </StreamHub>
+    <StreamProcessor>
+      <Storageproperties>
+        <Summary>
+          <queryresult>4291610.2349058</queryresult>
+        </Summary>
+      </Storageproperties>
+      <QueryRepo>
+        <Query>
+          <QueryName>string</QueryName>
+          <QueryParameters>string</QueryParameters>
+        </Query>
+      </QueryRepo>
+    </StreamProcessor>
+  </StreamProperties>
+  <DWHProperties>
+    <DimensionTables>
+      <DimensionTable name="PRODUCT">
+        <DimensionVariable type="VARCHAR(255)" property="PRIMARY KEY">PRODUCTKEY</DimensionVariable>
+        <DimensionVariable type="VARCHAR(255)" property="NOT NULL">PRODUCTNAME</DimensionVariable>
+        <DimensionVariable type="VARCHAR(255)" property="NOT NULL">CATEGORY</DimensionVariable>
+      </DimensionTable>
+      <DimensionTable name="REPORTINGDATE">
+        <DimensionVariable type="VARCHAR(255)" property="PRIMARY KEY">REPORTINGDATEKEY</DimensionVariable>
+        <DimensionVariable type="VARCHAR(8)" property="NOT NULL">Date</DimensionVariable>
+        <DimensionVariable type="INT" property="NOT NULL">DAY</DimensionVariable>
+        <DimensionVariable type="INT" property="NOT NULL">MONTH</DimensionVariable>
+        <DimensionVariable type="INT" property="NOT NULL">YEAR</DimensionVariable>
+        <DimensionVariable type="INT" property="NOT NULL">WEEKDAY</DimensionVariable>
+      </DimensionTable>
+      <DimensionTable name="CUSTOMER">
+        <DimensionVariable type="VARCHAR(255)" property="PRIMARY KEY">CUSTOMERKEY</DimensionVariable>
+        <DimensionVariable type="VARCHAR(255)" property="NOT NULL">CUSTOMERCITY</DimensionVariable>
+        <DimensionVariable type="VARCHAR(255)" property="NOT NULL">CUSTOMERTYPE</DimensionVariable>
+      </DimensionTable>
+      <DimensionTable name="SALESPERSON">
+        <DimensionVariable type="VARCHAR(255)" property="PRIMARY KEY">SALESPERSONKEY</DimensionVariable>
+        <DimensionVariable type="VARCHAR(255)" property="NOT NULL">SALESPERSONTYPE</DimensionVariable>
+        <DimensionVariable type="VARCHAR(255)" property="NOT NULL">SALESPERSONEXPERIENCE</DimensionVariable>
+      </DimensionTable>
+    </DimensionTables>
+    <FactVariables>
+      <FactVariable>ORDER_VALUE</FactVariable>
+      <FactVariable>COST_VALUE</FactVariable>
+      <FactVariable>SALE_UNITS</FactVariable>
+    </FactVariables>
+    <Facts>
+      <Fact>
+        <DimensionValue>string</DimensionValue>
+        <FactVariable name="string">-4729239.7650942</FactVariable>
+      </Fact>
+    </Facts>
+    <AggregateFunctions>
+      <AggregateFunction>string</AggregateFunction>
+    </AggregateFunctions>
+  </DWHProperties>
+</SDatabase>
