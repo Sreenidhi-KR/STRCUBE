@@ -6,8 +6,8 @@ import javax.xml.parsers.*;
 import org.w3c.dom.*;
 public class DimensionalProcessing {
     String url = "jdbc:mysql://localhost:3306/DataModeling?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
-    String username = "root"; // replace with your username
-    String password = "KVrsmck@21"; // replace with your password
+    String username = "hansal"; // replace with your username
+    String password = "2017033800105146"; // replace with your password
     String metaTable = "DimensionTables";
     public DimensionalProcessing(){}
     public boolean CreateMetaDT(){
