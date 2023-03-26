@@ -5,8 +5,8 @@
       <DataSources>
         <DataSource DS_id="DS-01">
           <WindowStorageProperties>
-            <size units="rows">150</size>
-            <time units="seconds">60</time>
+            <size units="rows">5</size>
+            <time units="seconds">10</time>
             <type>sliding</type>
             <origin>latest</origin>
           </WindowStorageProperties>

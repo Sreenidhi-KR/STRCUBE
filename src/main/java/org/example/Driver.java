@@ -1,13 +1,16 @@
 package org.example;
 
 public class Driver {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         DimensionalProcessing Dimproc = new DimensionalProcessing();
         Dimproc.CreateMetaDT();
-        String workingDir = "./dimensions";
-        String xmlFileName = "/DM Instance.xml";
-        Dimproc.GenerateDTs(workingDir, xmlFileName);
+        String dimensionsDirectory = "dimensions/";
+        String factsDirectory = "./facts/";
+        String xmlFileName = "DMInstance.xml";
+        Dimproc.GenerateDTs(dimensionsDirectory, xmlFileName);
         FactTableProcessing factTableProcessing=new FactTableProcessing();
-        factTableProcessing.GenerateFT(workingDir,xmlFileName);
+        factTableProcessing.GenerateFT(dimensionsDirectory,xmlFileName);
+        StreamProcessing streamProcessing = new StreamProcessing();
+        streamProcessing.start(factsDirectory,dimensionsDirectory,xmlFileName);
     }
 }

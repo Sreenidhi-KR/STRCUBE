@@ -14,8 +14,8 @@ import java.sql.Statement;
 
 public class FactTableProcessing {
     String url = "jdbc:mysql://localhost:3306/DataModeling?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
-    String username = "hansal"; // replace with your username
-    String password = "2017033800105146"; // replace with your password
+    String username = "sreenidhi"; // replace with your username
+    String password = "apple101"; // replace with your password
     public FactTableProcessing() {
     }
     public boolean GenerateFT(String workingDir, String xmlFileName){
