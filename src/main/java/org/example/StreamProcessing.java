@@ -1,5 +1,6 @@
  package org.example;
 
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -10,10 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collections;
 
 public class StreamProcessing {
@@ -82,7 +80,13 @@ public class StreamProcessing {
 
         while (true) {
             // Open the file and skip to the last line that was printed
-            System.out.println("CHECKING");
+            System.out.println("DELETING FACT TABLE");
+            Statement statement = conn.createStatement();
+
+            // Execute the SQL statement to delete all rows in the fact table
+            String deleteFactTableQuery = "DELETE FROM FactTable";
+            statement.executeUpdate(deleteFactTableQuery);
+            System.out.println("CHECKING FOR NEW FACTS");
             FileReader fileReader = new FileReader(csvFile);
             fileReader.skip(lastLineOffset);
 
