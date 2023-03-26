@@ -54,7 +54,7 @@
         <DimensionVariable type="VARCHAR(255)" property="NOT NULL">CATEGORY</DimensionVariable>
       </DimensionTable>
       <DimensionTable name="REPORTINGDATE">
-        <DimensionVariable type="VARCHAR(255)" property="PRIMARY KEY">REPORTINGDATEKEY</DimensionVariable>
+        <DimensionVariable type="VARCHAR(255)" property="PRIMARY KEY">TIMEKEY</DimensionVariable>
         <DimensionVariable type="VARCHAR(8)" property="NOT NULL">Date</DimensionVariable>
         <DimensionVariable type="INT" property="NOT NULL">DAY</DimensionVariable>
         <DimensionVariable type="INT" property="NOT NULL">MONTH</DimensionVariable>

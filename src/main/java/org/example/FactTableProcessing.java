@@ -28,10 +28,12 @@ public class FactTableProcessing {
 
             NodeList dimensionTableList = doc.getElementsByTagName("DimensionVariableKey");
             String[] dimensionTableNames = new String[dimensionTableList.getLength()];
+            String[] dimensionKeyNames = new String[dimensionTableList.getLength()];
 
             for(int i=0;i<dimensionTableList.getLength();i++){
                 Element dimensionTable = (Element) dimensionTableList.item(i);
                 dimensionTableNames[i] = dimensionTable.getAttribute("DimensionTable");
+                dimensionKeyNames[i]=dimensionTable.getTextContent();
 //                System.out.println(dimensionTableNames[i]);
 //                System.out.println(factVariableList.item(i).getAttribute());
             }
@@ -59,7 +61,7 @@ public class FactTableProcessing {
 
             String sql = "CREATE TABLE FactTable" + " (";
             for (int j = 0; j < dimensionTableNames.length; j++) {
-                sql += dimensionTableNames[j]+"KEY" + " " + "VARCHAR(255)" + " " + "NOT NULL";
+                sql += dimensionKeyNames[j] + " " + "VARCHAR(255)" + " " + "NOT NULL";
 //                if (j < dimensionTableNames.length - 1) {
                     sql += ", ";
 //                }
@@ -77,7 +79,7 @@ public class FactTableProcessing {
             String[] sqlalter=new String[dimensionTableNames.length];
 
             for(int i=0;i<sqlalter.length;i++){
-                sqlalter[i]="alter table FactTable add constraint fk_"+dimensionTableNames[i]+"KEY FOREIGN KEY ("+dimensionTableNames[i]+"KEY) REFERENCES "+dimensionTableNames[i]+"("+dimensionTableNames[i]+"KEY)";
+                sqlalter[i]="alter table FactTable add constraint fk_"+dimensionKeyNames[i]+" FOREIGN KEY ("+dimensionKeyNames[i]+") REFERENCES "+dimensionTableNames[i]+"("+dimensionKeyNames[i]+")";
             }
 
             try (Connection conn = DriverManager.getConnection(url, username, password);
