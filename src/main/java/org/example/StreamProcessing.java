@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.Collections;
 
@@ -18,14 +19,22 @@ public class StreamProcessing {
 
     public static void start(String factsDir ,String dimensionDir, String xmlFileName) throws InterruptedException, IOException, ClassNotFoundException, SQLException {
         int windowSize = 0;
-        int windowIntervalInMillis = 0;
+        int windowVelocity = 0;
+        int windowClockTickInMillis = 0;
         String csvPath;
         File csvFile = null;
+        long lastLineOffsetNew = 0;
+        int noOfRowsToBeDeleted =  0;
+        boolean initialRead = true;
+
 
         String url = "jdbc:mysql://localhost:3306/DataModeling?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
         String username = "sreenidhi"; // replace with your username
         String password = "apple101";
-        
+        // Set up the database connection
+        Connection conn = DriverManager.getConnection(url,username,password);
+
+
         try {
             File inputFile = new File("./dimensions/DMInstance.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -41,15 +50,21 @@ public class StreamProcessing {
                 String timeUnits = dataSource.getElementsByTagName("time").item(0).getAttributes().getNamedItem("units").getTextContent();
                 String filePath = dataSource.getElementsByTagName("FilePath").item(0).getTextContent();
                 String filetype = dataSource.getElementsByTagName("FileType").item(0).getTextContent();
+                String velocity = dataSource.getElementsByTagName("velocity").item(0).getTextContent();
+                String velocityUnits = dataSource.getElementsByTagName("velocity").item(0).getAttributes().getNamedItem("units").getTextContent();
+
 
                 windowSize = Integer.parseInt(size);
+                windowVelocity = Integer.parseInt(velocity);
                 System.out.println("Size : " + size + " " + sizeUnits);
-                System.out.println("Time : " + time + " " + timeUnits);
+                System.out.println("Clock Tick : " + time + " " + timeUnits);
+                System.out.println("Velocity : " + velocity + " " + velocityUnits);
+
                 if(timeUnits.contentEquals("seconds")){
-                    windowIntervalInMillis = Integer.parseInt(time) * 1000;
+                    windowClockTickInMillis = Integer.parseInt(time) * 1000;
                 }
                 else{
-                    windowIntervalInMillis = Integer.parseInt(time);
+                    windowClockTickInMillis = Integer.parseInt(time);
                 }
                 System.out.println("File Path : " + filePath);
 
@@ -60,68 +75,105 @@ public class StreamProcessing {
             e.printStackTrace();
         }
 
- 
-
-        long lastLineOffset = 0;
 
         // Read the header line separately and split it into column names
         BufferedReader reader = new BufferedReader(new FileReader(csvFile));
         String header = reader.readLine();
+        byte[] bytes = header.getBytes(StandardCharsets.UTF_8);
+        System.out.println("Bytes Read" + bytes.length);
+        lastLineOffsetNew += bytes.length;
         System.out.println(header);
         String[] columnNames = header.split(",");
         reader.close();
 
-        // Set up the database connection
-        Connection conn = DriverManager.getConnection(url,username,password);
+        System.out.println("Clearing fact table");
+        Statement statement = conn.createStatement();
+        String deleteFactTableQuery = "DELETE FROM FactTable";
+        statement.executeUpdate(deleteFactTableQuery);
 
-        // Prepare the insert statement
+
+
         String insertQuery = "INSERT INTO FactTable (" + header + ") VALUES (" + String.join(",", Collections.nCopies(columnNames.length, "?")) + ")"; PreparedStatement stmt = conn.prepareStatement(insertQuery);
-        System.out.println(insertQuery);
+        PreparedStatement deleteNRowsQuery = conn.prepareStatement("DELETE FROM FactTable LIMIT ?");
+
 
         while (true) {
-            // Open the file and skip to the last line that was printed
-            System.out.println("DELETING FACT TABLE");
-            Statement statement = conn.createStatement();
 
-            // Execute the SQL statement to delete all rows in the fact table
-            String deleteFactTableQuery = "DELETE FROM FactTable";
-            statement.executeUpdate(deleteFactTableQuery);
+            if(noOfRowsToBeDeleted > 0){
+                deleteNRowsQuery.setInt(1, noOfRowsToBeDeleted);
+                int rowsDeleted = deleteNRowsQuery.executeUpdate();
+                System.out.println("FIRST " + rowsDeleted + " ROW DELETED FROM FACT TABLE");
+            }
+            else if(noOfRowsToBeDeleted <0){
+                 statement = conn.createStatement();
+                 deleteFactTableQuery = "DELETE FROM FactTable";
+                int rowsDeleted = statement.executeUpdate(deleteFactTableQuery);
+                System.out.println(rowsDeleted + " ALL ROWS DELETED FROM FACT TABLE");
+            }
+
             System.out.println("CHECKING FOR NEW FACTS");
             FileReader fileReader = new FileReader(csvFile);
-            fileReader.skip(lastLineOffset);
+            fileReader.skip(lastLineOffsetNew);
 
-            // Insert any new lines that have been added to the file
             BufferedReader br = new BufferedReader(fileReader);
             String line;
-            int counter = 0;
+            int noOfLinesReadInCurrentWindow = 0;
+            int noOfSkippedLinesInCurrentWindow = 0;
+
+
             while ((line = br.readLine()) != null) {
-                // Skip the first line (header)
                 if (line.trim().isEmpty() || line.equals(header)) {
                     continue;
                 }
+
+                bytes = line.getBytes(StandardCharsets.UTF_8);
+                lastLineOffsetNew += bytes.length +1;
                 String[] values = line.split(",");
+
+                if(!initialRead && ((windowSize-windowVelocity + noOfSkippedLinesInCurrentWindow) <0)){
+                    noOfSkippedLinesInCurrentWindow++;
+                    continue;
+                }
+
                 for (int i = 0; i < columnNames.length; i++) {
                     stmt.setString(i + 1, values[i]);
                 }
 
                 stmt.addBatch();
-                counter++;
+                noOfLinesReadInCurrentWindow++;
                 System.out.println(stmt.toString());
-                if (counter >= windowSize) {
+                if(initialRead && noOfLinesReadInCurrentWindow >= windowSize){
+                    break;
+                }
+                if(windowSize - windowVelocity < 0 && noOfLinesReadInCurrentWindow >= windowSize){
+                    break;
+                }
+
+                 if (!initialRead && windowSize - windowVelocity > 0 && noOfLinesReadInCurrentWindow >= windowSize - windowVelocity) {
                     break;
                 }
             }
-            int[] updateCounts = stmt.executeBatch();
-            System.out.println("INSERTED "+ updateCounts.length + " ROWS INTO FACTTABLE");
-            // Remember the byte offset of the last line that was printed
-            lastLineOffset = csvFile.length();
+            initialRead=false;
 
-            // Close the file
+            int[] updateCounts = stmt.executeBatch();
+            System.out.println("INSERTED "+ updateCounts.length + " ROWS INTO FACT TABLE");
+            if(noOfLinesReadInCurrentWindow < windowSize - windowVelocity){
+                noOfRowsToBeDeleted = noOfLinesReadInCurrentWindow;
+            }
+            else{
+                noOfRowsToBeDeleted =  windowSize - windowVelocity;
+            }
+            if(noOfSkippedLinesInCurrentWindow > 0){
+                System.out.println("noOfSkippedLinesInCurrentWindow " + noOfSkippedLinesInCurrentWindow);
+            }
+
+
+
             br.close();
             fileReader.close();
 
-            // Wait for 5 seconds before checking the file again
-            Thread.sleep(windowIntervalInMillis);
+            // Wait for clockTick seconds before checking the file again
+            Thread.sleep(windowClockTickInMillis);
         }
     }
 
