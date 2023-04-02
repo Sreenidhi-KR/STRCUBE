@@ -152,6 +152,9 @@ public class StreamProcessing {
                  if (!initialRead && windowSize - windowVelocity > 0 && noOfLinesReadInCurrentWindow >= windowSize - windowVelocity) {
                     break;
                 }
+                 if(!initialRead && windowSize-windowVelocity == 0 && noOfLinesReadInCurrentWindow == windowSize){
+                     break;
+                 }
             }
             initialRead=false;
 
@@ -160,14 +163,17 @@ public class StreamProcessing {
             if(noOfLinesReadInCurrentWindow < windowSize - windowVelocity){
                 noOfRowsToBeDeleted = noOfLinesReadInCurrentWindow;
             }
+            else if(windowSize == windowVelocity){
+                noOfRowsToBeDeleted = windowSize;
+            }
             else{
                 noOfRowsToBeDeleted =  windowSize - windowVelocity;
             }
+
+
             if(noOfSkippedLinesInCurrentWindow > 0){
                 System.out.println("noOfSkippedLinesInCurrentWindow " + noOfSkippedLinesInCurrentWindow);
             }
-
-
 
             br.close();
             fileReader.close();
