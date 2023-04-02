@@ -149,7 +149,7 @@ public class StreamProcessing {
                     break;
                 }
 
-                 if (!initialRead && windowSize - windowVelocity > 0 && noOfLinesReadInCurrentWindow >= windowSize - windowVelocity) {
+                 if (!initialRead && windowSize - windowVelocity > 0 && noOfLinesReadInCurrentWindow >= windowVelocity) {
                     break;
                 }
                  if(!initialRead && windowSize-windowVelocity == 0 && noOfLinesReadInCurrentWindow == windowSize){
@@ -167,7 +167,7 @@ public class StreamProcessing {
                 noOfRowsToBeDeleted = windowSize;
             }
             else{
-                noOfRowsToBeDeleted =  windowSize - windowVelocity;
+                noOfRowsToBeDeleted =  windowVelocity;
             }
 
 
