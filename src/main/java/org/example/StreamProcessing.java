@@ -29,8 +29,8 @@ public class StreamProcessing {
 
 
         String url = "jdbc:mysql://localhost:3306/DataModeling?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
-        String username = "sreenidhi"; // replace with your username
-        String password = "apple101";
+        String username = "root"; // replace with your username
+        String password = "KVrsmck@21";
         // Set up the database connection
         Connection conn = DriverManager.getConnection(url,username,password);
 
@@ -93,7 +93,8 @@ public class StreamProcessing {
 
 
 
-        String insertQuery = "INSERT INTO FactTable (" + header + ") VALUES (" + String.join(",", Collections.nCopies(columnNames.length, "?")) + ")"; PreparedStatement stmt = conn.prepareStatement(insertQuery);
+        String insertQuery = "INSERT INTO FactTable (" + header + ") VALUES (" + String.join(",", Collections.nCopies(columnNames.length, "?")) + ")";
+        PreparedStatement stmt = conn.prepareStatement(insertQuery);
         PreparedStatement deleteNRowsQuery = conn.prepareStatement("DELETE FROM FactTable LIMIT ?");
 
 
