@@ -6,7 +6,7 @@
         <DataSource DS_id="DS-01">
           <WindowStorageProperties>
             <size units="rows">5</size>
-            <time units="seconds">15</time>
+            <time units="seconds">5</time>
             <velocity units="rows">3</velocity>
             <type>sliding</type>
             <origin>latest</origin>
