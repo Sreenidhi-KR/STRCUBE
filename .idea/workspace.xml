@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Modularized(1)">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/SampleStream.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" afterDir="false" />
+    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Added SampleStream.java">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dimensions/DMInstance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dimensions/DMInstance.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/StreamProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/StreamProcessing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/facts/stream.csv" beforeDir="false" afterPath="$PROJECT_DIR$/facts/stream.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/SampleStream.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/SampleStream.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +91,7 @@
       <workItem from="1680425181967" duration="2666000" />
       <workItem from="1680429535871" duration="1205000" />
       <workItem from="1680438923736" duration="1029000" />
-      <workItem from="1680445211350" duration="5201000" />
+      <workItem from="1680445211350" duration="8272000" />
     </task>
     <task id="LOCAL-00001" summary="README.md">
       <created>1679554747117</created>
@@ -124,7 +121,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679641144481</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added SampleStream.java">
+      <created>1680454411222</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1680454411222</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,6 +149,7 @@
     <MESSAGE value="README.md" />
     <MESSAGE value="Updated(1)" />
     <MESSAGE value="Modularized(1)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modularized(1)" />
+    <MESSAGE value="Added SampleStream.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added SampleStream.java" />
   </component>
 </project>
