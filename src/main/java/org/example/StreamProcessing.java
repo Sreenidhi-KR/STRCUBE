@@ -1,4 +1,4 @@
- package org.example;
+package org.example;
 
 
 import org.w3c.dom.Document;
@@ -24,14 +24,13 @@ public class StreamProcessing {
         String csvPath;
         File csvFile = null;
         long lastLineOffsetNew = 0;
-        int noOfRowsToBeDeleted =  0;
         boolean initialRead = true;
+        boolean earlySleep = false;
 
 
-        DBConfig dbConfig=new DBConfig();
-        String url = dbConfig.getUrl();
-        String username = dbConfig.getUsername();
-        String password = dbConfig.getPassword();
+        String url = "jdbc:mysql://localhost:3306/DataModeling?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
+        String username = "sreenidhi"; // replace with your username
+        String password = "apple101";
         // Set up the database connection
         Connection conn = DriverManager.getConnection(url,username,password);
 
@@ -94,24 +93,11 @@ public class StreamProcessing {
 
 
 
-        String insertQuery = "INSERT INTO FactTable (" + header + ") VALUES (" + String.join(",", Collections.nCopies(columnNames.length, "?")) + ")";
-        PreparedStatement stmt = conn.prepareStatement(insertQuery);
+        String insertQuery = "INSERT INTO FactTable (" + header + ") VALUES (" + String.join(",", Collections.nCopies(columnNames.length, "?")) + ")"; PreparedStatement insertStatement = conn.prepareStatement(insertQuery);
         PreparedStatement deleteNRowsQuery = conn.prepareStatement("DELETE FROM FactTable LIMIT ?");
 
 
         while (true) {
-
-            if(noOfRowsToBeDeleted > 0){
-                deleteNRowsQuery.setInt(1, noOfRowsToBeDeleted);
-                int rowsDeleted = deleteNRowsQuery.executeUpdate();
-                System.out.println("FIRST " + rowsDeleted + " ROW DELETED FROM FACT TABLE");
-            }
-            else if(noOfRowsToBeDeleted <0){
-                 statement = conn.createStatement();
-                 deleteFactTableQuery = "DELETE FROM FactTable";
-                int rowsDeleted = statement.executeUpdate(deleteFactTableQuery);
-                System.out.println(rowsDeleted + " ALL ROWS DELETED FROM FACT TABLE");
-            }
 
             System.out.println("CHECKING FOR NEW FACTS");
             FileReader fileReader = new FileReader(csvFile);
@@ -123,7 +109,13 @@ public class StreamProcessing {
             int noOfSkippedLinesInCurrentWindow = 0;
 
 
-            while ((line = br.readLine()) != null) {
+            while (true) {
+                line = br.readLine();
+                if(line == null){
+                    earlySleep = true;
+                    //Do any custom logic here like to recheck every 't' min
+                    break;
+                }
                 if (line.trim().isEmpty() || line.equals(header)) {
                     continue;
                 }
@@ -132,54 +124,59 @@ public class StreamProcessing {
                 lastLineOffsetNew += bytes.length +1;
                 String[] values = line.split(",");
 
+                //Checking if we need to skip rows
                 if(!initialRead && ((windowSize-windowVelocity + noOfSkippedLinesInCurrentWindow) <0)){
                     noOfSkippedLinesInCurrentWindow++;
                     continue;
                 }
 
                 for (int i = 0; i < columnNames.length; i++) {
-                    stmt.setString(i + 1, values[i]);
+                    insertStatement.setString(i + 1, values[i]);
                 }
 
-                stmt.addBatch();
+                insertStatement.addBatch();
                 noOfLinesReadInCurrentWindow++;
-                System.out.println(stmt.toString());
-                if(initialRead && noOfLinesReadInCurrentWindow >= windowSize){
-                    break;
-                }
-                if(windowSize - windowVelocity < 0 && noOfLinesReadInCurrentWindow >= windowSize){
-                    break;
-                }
+                System.out.println(insertStatement.toString());
 
-                 if (!initialRead && windowSize - windowVelocity > 0 && noOfLinesReadInCurrentWindow >= windowVelocity) {
-                    break;
+                if(initialRead){
+                    if( noOfLinesReadInCurrentWindow  == windowSize){
+                        break;
+                    }
                 }
-                 if(!initialRead && windowSize-windowVelocity == 0 && noOfLinesReadInCurrentWindow == windowSize){
-                     break;
-                 }
+                else {
+                    if (windowSize  <= windowVelocity && noOfLinesReadInCurrentWindow == windowSize) {
+                        break;
+                    }
+                    if (windowSize > windowVelocity && noOfLinesReadInCurrentWindow == windowVelocity) {
+                        break;
+                    }
+                }
             }
-            initialRead=false;
 
-            int[] updateCounts = stmt.executeBatch();
 
+            deleteNRowsQuery.setInt(1, noOfLinesReadInCurrentWindow);
+            int rowsDeleted = deleteNRowsQuery.executeUpdate();
+            System.out.println("FIRST " + rowsDeleted + " ROW DELETED FROM FACT TABLE");
+
+
+            int[] updateCounts = insertStatement.executeBatch();
             System.out.println("INSERTED "+ updateCounts.length + " ROWS INTO FACT TABLE");
-            if(noOfLinesReadInCurrentWindow < windowSize - windowVelocity){
-                noOfRowsToBeDeleted = noOfLinesReadInCurrentWindow;
-            }
-            else if(windowSize == windowVelocity){
-                noOfRowsToBeDeleted = windowSize;
-            }
-            else{
-                noOfRowsToBeDeleted =  windowVelocity;
-            }
 
 
             if(noOfSkippedLinesInCurrentWindow > 0){
                 System.out.println("noOfSkippedLinesInCurrentWindow " + noOfSkippedLinesInCurrentWindow);
             }
 
+
+
             br.close();
             fileReader.close();
+            initialRead=false;
+
+            if(earlySleep){
+                initialRead = true;
+            }
+            earlySleep = false;
 
             // Wait for clockTick seconds before checking the file again
             Thread.sleep(windowClockTickInMillis);
