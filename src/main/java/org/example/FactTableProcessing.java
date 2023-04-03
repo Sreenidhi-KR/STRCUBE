@@ -13,9 +13,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class FactTableProcessing {
-    String url = "jdbc:mysql://localhost:3306/DataModeling?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
-    String username = "sreenidhi"; // replace with your username
-    String password = "apple101"; // replace with your password
+    DBConfig dbConfig=new DBConfig();
+    String url = dbConfig.getUrl();
+    String username = dbConfig.getUsername();
+    String password = dbConfig.getPassword();
     public FactTableProcessing() {
     }
     public boolean GenerateFT(String workingDir, String xmlFileName){

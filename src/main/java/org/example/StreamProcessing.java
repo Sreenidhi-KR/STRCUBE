@@ -28,9 +28,10 @@ public class StreamProcessing {
         boolean initialRead = true;
 
 
-        String url = "jdbc:mysql://localhost:3306/DataModeling?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
-        String username = "root"; // replace with your username
-        String password = "KVrsmck@21";
+        DBConfig dbConfig=new DBConfig();
+        String url = dbConfig.getUrl();
+        String username = dbConfig.getUsername();
+        String password = dbConfig.getPassword();
         // Set up the database connection
         Connection conn = DriverManager.getConnection(url,username,password);
 
@@ -160,6 +161,7 @@ public class StreamProcessing {
             initialRead=false;
 
             int[] updateCounts = stmt.executeBatch();
+
             System.out.println("INSERTED "+ updateCounts.length + " ROWS INTO FACT TABLE");
             if(noOfLinesReadInCurrentWindow < windowSize - windowVelocity){
                 noOfRowsToBeDeleted = noOfLinesReadInCurrentWindow;

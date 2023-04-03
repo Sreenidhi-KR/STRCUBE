@@ -16,9 +16,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 public class NewStreamProcessing {
     // Database Credentials
-   public static String url = "jdbc:mysql://localhost:3306/DataModeling?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
-    public static String username = "root";
-    public static String password = "KVrsmck@21";
+    public static DBConfig dbConfig=new DBConfig();
+    public static String url = dbConfig.getUrl();
+    public static String username = dbConfig.getUsername();
+    public static String password = dbConfig.getPassword();
     /* Offset: Stores Number of Bytes to Skip to get to Start of Window... */
     public static int Offset = 0;
 
