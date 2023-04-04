@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated SampleStream.java">
+    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Added NewStreamProcessing.java">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dimensions/DMInstance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dimensions/DMInstance.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/NewStreamProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/NewStreamProcessing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/SampleStream.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DBConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/DBConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +53,14 @@
     ]
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Driver">
+    <configuration name="Driver" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="org.example.Driver" />
+      <module name="DataModeling" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="DataModeling" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -78,6 +84,10 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Application.Driver" />
+      <item itemvalue="Maven.DataModeling" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -94,7 +104,11 @@
       <workItem from="1680425181967" duration="2666000" />
       <workItem from="1680429535871" duration="1205000" />
       <workItem from="1680438923736" duration="1029000" />
-      <workItem from="1680445211350" duration="17388000" />
+      <workItem from="1680445211350" duration="17472000" />
+      <workItem from="1680492659254" duration="201000" />
+      <workItem from="1680499670427" duration="968000" />
+      <workItem from="1680585408273" duration="1947000" />
+      <workItem from="1680590338526" duration="371000" />
     </task>
     <task id="LOCAL-00001" summary="README.md">
       <created>1679554747117</created>
@@ -138,7 +152,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680457655021</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Added NewStreamProcessing.java">
+      <created>1680466644211</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1680466644211</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,6 +182,7 @@
     <MESSAGE value="Modularized(1)" />
     <MESSAGE value="Added SampleStream.java" />
     <MESSAGE value="Updated SampleStream.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated SampleStream.java" />
+    <MESSAGE value="Added NewStreamProcessing.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added NewStreamProcessing.java" />
   </component>
 </project>

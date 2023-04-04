@@ -13,10 +13,7 @@ public class Driver {
 //        StreamProcessing streamProcessing = new StreamProcessing();
 //        streamProcessing.start(factsDirectory,dimensionsDirectory,xmlFileName);
         /* Sliding Window Implementation... */
-//        NewStreamProcessing nsp = new NewStreamProcessing();
-//        nsp.startStreamService(factsDirectory, dimensionsDirectory, xmlFileName);
-
-        StreamProcessing streamProcessing = new StreamProcessing();
-        streamProcessing.start(factsDirectory,dimensionsDirectory,xmlFileName);
+        NewStreamProcessing nsp = new NewStreamProcessing();
+        nsp.startStreamService(factsDirectory, dimensionsDirectory, xmlFileName);
     }
 }
