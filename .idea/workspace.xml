@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Added NewStreamProcessing.java">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated DB Config to VM">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DBConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/DBConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dimensions/DMInstance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dimensions/DMInstance.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +107,10 @@
       <workItem from="1680492659254" duration="201000" />
       <workItem from="1680499670427" duration="968000" />
       <workItem from="1680585408273" duration="1947000" />
-      <workItem from="1680590338526" duration="371000" />
+      <workItem from="1680590338526" duration="576000" />
+      <workItem from="1680590925185" duration="64000" />
+      <workItem from="1680601440483" duration="165000" />
+      <workItem from="1680723001949" duration="2893000" />
     </task>
     <task id="LOCAL-00001" summary="README.md">
       <created>1679554747117</created>
@@ -159,7 +161,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680466644211</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Updated DB Config to VM">
+      <created>1680590904962</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1680590904962</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,6 +192,7 @@
     <MESSAGE value="Added SampleStream.java" />
     <MESSAGE value="Updated SampleStream.java" />
     <MESSAGE value="Added NewStreamProcessing.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added NewStreamProcessing.java" />
+    <MESSAGE value="Updated DB Config to VM" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated DB Config to VM" />
   </component>
 </project>

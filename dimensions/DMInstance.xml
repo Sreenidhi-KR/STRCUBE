@@ -36,15 +36,115 @@
     <StreamProcessor>
       <Storageproperties>
         <Summary>
-          <queryresult>4291610.2349058</queryresult>
+          <SummaryProperties>
+            <SummaryItem type="DECIMAL" property="PRIMARY KEY">Query Id</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" Property="NOT NULL">Fact Variable</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" Property="NOT NULL">Aggregate Function</SummaryItem>
+            <SummaryItem type="DECIMAL" Property="">Group Id</SummaryItem>
+            <SummaryItem type="DECIMAL" Property="DEFAULT 0">Result</SummaryItem>
+          </SummaryProperties>
+          <GroupProperties>
+            <GroupItem type="DECIMAL" property="IDENTITY(1,1) PRIMARY KEY">Id</GroupItem>
+            <GroupItem type="DECIMAL" property="NOT NULL">Group Id</GroupItem>
+            <GroupItem type="VARCHAR(255)" property="NOT NULL">Attribute</GroupItem>
+          </GroupProperties>
         </Summary>
+        <Log>
+          <LogItem type="DECIMAL" property="IDENTITY(1,1) PRIMARY KEY">LogId</LogItem>
+          <LogItem type="DATETIME" property="NOT NULL">TimeStamp</LogItem>
+          <LogItem type="DECIMAL" property="NOT NULL">Query Id</LogItem>
+          <LogItem type="VARCHAR(255)" property="NOT NULL">Fact Variable</LogItem>
+          <LogItem type="VARCHAR(255)" Property="NOT NULL">Aggregate Function</LogItem>
+          <LogItem type="DECIMAL" Property="NOT NULL">Window Result</LogItem>
+        </Log>
       </Storageproperties>
-      <QueryRepo>
-        <Query>
-          <QueryName>string</QueryName>
-          <QueryParameters>string</QueryParameters>
-        </Query>
-      </QueryRepo>
+      <QueryRepositories>
+        <QueryRepo type="Aggregate">
+          <Query id="1">
+            <FactVariable>SALE_UNITS</FactVariable>
+            <AggregateFunction>SUM</AggregateFunction>
+          </Query>
+          <Query id="2">
+            <FactVariable>SALE_UNITS</FactVariable>
+            <AggregateFunction>SUM</AggregateFunction>
+            <GroupBy join="CUSTOMERKEY">
+              <Group>CUSTOMERCITY</Group>
+              <Group>CUSTOMERTYPE</Group>
+            </GroupBy>
+          </Query>
+          <Query id="3">
+            <FactVariable>SALE_UNITS</FactVariable>
+            <AggregateFunction>COUNT</AggregateFunction>
+          </Query>
+          <Query id="4">
+            <FactVariable>SALE_UNITS</FactVariable>
+            <AggregateFunction>AVG</AggregateFunction>
+          </Query>
+          <Query id="5">
+            <FactVariable>SALE_UNITS</FactVariable>
+            <AggregateFunction>MIN</AggregateFunction>
+          </Query>
+          <Query id="6">
+            <FactVariable>COST_VALUE</FactVariable>
+            <AggregateFunction>MAX</AggregateFunction>
+          </Query>
+          <Query id="7">
+            <FactVariable>COST_VALUE</FactVariable>
+            <AggregateFunction>SUM</AggregateFunction>
+          </Query>
+          <Query id="8">
+            <FactVariable>COST_VALUE</FactVariable>
+            <AggregateFunction>AVG</AggregateFunction>
+            <GroupBy join="PRODUCTKEY">
+              <Group>CATEGORY</Group>
+            </GroupBy>
+          </Query>
+          <Query id="9">
+            <FactVariable>COST_VALUE</FactVariable>
+            <AggregateFunction>COUNT</AggregateFunction>
+          </Query>
+          <Query id="10">
+            <FactVariable>COST_VALUE</FactVariable>
+            <AggregateFunction>AVG</AggregateFunction>
+          </Query>
+          <Query id="11">
+            <FactVariable>COST_VALUE</FactVariable>
+            <AggregateFunction>MIN</AggregateFunction>
+          </Query>
+          <Query id="12">
+            <FactVariable>COST_VALUE</FactVariable>
+            <AggregateFunction>MAX</AggregateFunction>
+          </Query>
+          <Query id="13">
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <AggregateFunction>SUM</AggregateFunction>
+          </Query>
+          <Query id="14">
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <AggregateFunction>AVG</AggregateFunction>
+            <GroupBy join="SALESPERSONKEY">
+              <Group>SALESPERSONTYPE</Group>
+            </GroupBy>
+          </Query>
+          <Query id="15">
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <AggregateFunction>COUNT</AggregateFunction>
+          </Query>
+          <Query id="16">
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <AggregateFunction>AVG</AggregateFunction>
+          </Query>
+          <Query id="17">
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <AggregateFunction>MIN</AggregateFunction>
+          </Query>
+          <Query id="18">
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <AggregateFunction>MAX</AggregateFunction>
+          </Query>
+        </QueryRepo>
+      </QueryRepositories>
+
     </StreamProcessor>
   </StreamProperties>
   <DWHProperties>
