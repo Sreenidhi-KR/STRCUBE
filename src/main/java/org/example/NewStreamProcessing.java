@@ -23,6 +23,8 @@ public class NewStreamProcessing {
     /* Offset: Stores Number of Bytes to Skip to get to Start of Window... */
     public static int Offset = 0;
 
+    public static int curr = 0;
+
     public NewStreamProcessing() throws FileNotFoundException {
     }
 
@@ -104,6 +106,7 @@ public class NewStreamProcessing {
         int finalVelocity = Velocity;
         int finalSize = Size;
         String[] finalColumnTypes = columnTypes;
+        curr = finalSize;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -171,6 +174,8 @@ public class NewStreamProcessing {
             byte[] lineBytes = csvLine.getBytes(StandardCharsets.UTF_8);
             Offset += lineBytes.length + 1;
         }
-        return avail;
+        int curRows = curr;
+        curr = avail;
+        return curRows;
     }
 }
