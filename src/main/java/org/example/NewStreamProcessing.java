@@ -108,7 +108,10 @@ public class NewStreamProcessing {
             @Override
             public void run() {
                 try {
-                    SlidingWindow(conn, header, finalCsvFile, finalVelocity, finalSize, finalColumnTypes);
+                    int newRows=0;
+                    newRows = SlidingWindow(conn, header, finalCsvFile, finalVelocity, finalSize, finalColumnTypes);
+                    System.out.println("New Lines Added: "+ newRows);
+                    //Perform Query Processing here onwards...
                 } catch (IOException | SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -116,7 +119,7 @@ public class NewStreamProcessing {
         }, 0, TimeClick);
     }
     /* Sliding Window Method Definition... */
-    public static void SlidingWindow(Connection conn, String header, File csvFile, int Velocity, int Size, String[] columnTypes) throws IOException, SQLException {
+    public static int SlidingWindow(Connection conn, String header, File csvFile, int Velocity, int Size, String[] columnTypes) throws IOException, SQLException {
         System.out.println("...............................");
         System.out.println("[Clearing fact table...]");
         // Preparing to Truncate Table: FactTable (Simply Drops and Creates)
@@ -168,5 +171,6 @@ public class NewStreamProcessing {
             byte[] lineBytes = csvLine.getBytes(StandardCharsets.UTF_8);
             Offset += lineBytes.length + 1;
         }
+        return avail;
     }
 }
