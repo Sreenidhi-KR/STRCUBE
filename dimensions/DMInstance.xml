@@ -37,25 +37,25 @@
       <Storageproperties>
         <Summary>
           <SummaryProperties>
-            <SummaryItem type="DECIMAL" property="PRIMARY KEY">Query Id</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" Property="NOT NULL">Fact Variable</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" Property="NOT NULL">Aggregate Function</SummaryItem>
-            <SummaryItem type="DECIMAL" Property="">Group Id</SummaryItem>
-            <SummaryItem type="DECIMAL" Property="DEFAULT 0">Result</SummaryItem>
+            <SummaryItem type="INTEGER" property="PRIMARY KEY">Query_Id</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</SummaryItem>
+            <SummaryItem type="INTEGER" property="">Group_Id</SummaryItem>
+            <SummaryItem type="DECIMAL" property="DEFAULT 0">Result</SummaryItem>
           </SummaryProperties>
           <GroupProperties>
-            <GroupItem type="DECIMAL" property="IDENTITY(1,1) PRIMARY KEY">Id</GroupItem>
-            <GroupItem type="DECIMAL" property="NOT NULL">Group Id</GroupItem>
+            <GroupItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Id</GroupItem>
+            <GroupItem type="INTEGER" property="NOT NULL">Group_Id</GroupItem>
             <GroupItem type="VARCHAR(255)" property="NOT NULL">Attribute</GroupItem>
           </GroupProperties>
         </Summary>
         <Log>
-          <LogItem type="DECIMAL" property="IDENTITY(1,1) PRIMARY KEY">LogId</LogItem>
+          <LogItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Log_Id</LogItem>
           <LogItem type="DATETIME" property="NOT NULL">TimeStamp</LogItem>
-          <LogItem type="DECIMAL" property="NOT NULL">Query Id</LogItem>
-          <LogItem type="VARCHAR(255)" property="NOT NULL">Fact Variable</LogItem>
-          <LogItem type="VARCHAR(255)" Property="NOT NULL">Aggregate Function</LogItem>
-          <LogItem type="DECIMAL" Property="NOT NULL">Window Result</LogItem>
+          <LogItem type="INTEGER" property="NOT NULL">Query_Id</LogItem>
+          <LogItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</LogItem>
+          <LogItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</LogItem>
+          <LogItem type="DECIMAL" property="NOT NULL">Window_Result</LogItem>
         </Log>
       </Storageproperties>
       <QueryRepositories>
@@ -187,5 +187,19 @@
     <AggregateFunctions>
       <AggregateFunction>string</AggregateFunction>
     </AggregateFunctions>
+<!--    <QueryList>-->
+<!--      <Query id="01">-->
+<!--        <AggregateFunction>sum</AggregateFunction>-->
+<!--        <FactVariable>ORDER_VALUE</FactVariable>-->
+<!--      </Query>-->
+<!--      <Query id="02">-->
+<!--        <AggregateFunction>sum</AggregateFunction>-->
+<!--        <FactVariable>COST_VALUE</FactVariable>-->
+<!--      </Query>-->
+<!--      <Query id="03">-->
+<!--        <AggregateFunction>sum</AggregateFunction>-->
+<!--        <FactVariable>SALE_UNITS</FactVariable>-->
+<!--      </Query>-->
+<!--    </QueryList>-->
   </DWHProperties>
 </SDatabase>
