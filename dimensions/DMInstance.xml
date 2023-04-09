@@ -6,7 +6,7 @@
         <DataSource DS_id="DS-01">
           <WindowStorageProperties>
             <size units="rows">5</size>
-            <time units="seconds">5</time>
+            <time units="seconds">100</time>
             <velocity units="rows">3</velocity>
             <type>sliding</type>
             <origin>latest</origin>
@@ -96,7 +96,7 @@
           </Query>
           <Query id="8">
             <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>AVG</AggregateFunction>
+            <AggregateFunction>SUM</AggregateFunction>
             <GroupBy join="PRODUCTKEY" table="PRODUCT">
               <Group>CATEGORY</Group>
             </GroupBy>
@@ -107,7 +107,7 @@
           </Query>
           <Query id="10">
             <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>AVG</AggregateFunction>
+            <AggregateFunction>SUM</AggregateFunction>
           </Query>
           <Query id="11">
             <FactVariable>COST_VALUE</FactVariable>
@@ -123,7 +123,7 @@
           </Query>
           <Query id="14">
             <FactVariable>ORDER_VALUE</FactVariable>
-            <AggregateFunction>AVG</AggregateFunction>
+            <AggregateFunction>MAX</AggregateFunction>
             <GroupBy join="SALESPERSONKEY" table="SALESPERSON">
               <Group>SALESPERSONTYPE</Group>
             </GroupBy>

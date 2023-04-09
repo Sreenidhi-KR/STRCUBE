@@ -35,6 +35,7 @@ public class NewStreamProcessing {
         String csvPath = "";
         File csvFile = null;
         String[] columnTypes = null;
+        SummaryGeneration summaryGeneration = new SummaryGeneration();
         // Process XML Instance & Get DataSource Properties
         try {
             File inputFile = new File(dimensionDir+xmlFileName);
@@ -115,6 +116,8 @@ public class NewStreamProcessing {
                     newRows = SlidingWindow(conn, header, finalCsvFile, finalVelocity, finalSize, finalColumnTypes);
                     System.out.println("New Lines Added: "+ newRows);
                     //Perform Query Processing here onwards...
+                    summaryGeneration.generateSummary(newRows);
+
                 } catch (IOException | SQLException e) {
                     throw new RuntimeException(e);
                 }
