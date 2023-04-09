@@ -41,6 +41,8 @@
             <SummaryItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</SummaryItem>
             <SummaryItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</SummaryItem>
             <SummaryItem type="INTEGER" property="">Group_Id</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="DEFAULT 0">Join_Key</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="DEFAULT 0">Table_Name</SummaryItem>
             <SummaryItem type="DECIMAL" property="DEFAULT 0">Result</SummaryItem>
           </SummaryProperties>
           <GroupProperties>
@@ -67,7 +69,7 @@
           <Query id="2">
             <FactVariable>SALE_UNITS</FactVariable>
             <AggregateFunction>SUM</AggregateFunction>
-            <GroupBy join="CUSTOMERKEY">
+            <GroupBy join="CUSTOMERKEY" table="CUSTOMER">
               <Group>CUSTOMERCITY</Group>
               <Group>CUSTOMERTYPE</Group>
             </GroupBy>
@@ -95,7 +97,7 @@
           <Query id="8">
             <FactVariable>COST_VALUE</FactVariable>
             <AggregateFunction>AVG</AggregateFunction>
-            <GroupBy join="PRODUCTKEY">
+            <GroupBy join="PRODUCTKEY" table="PRODUCT">
               <Group>CATEGORY</Group>
             </GroupBy>
           </Query>
@@ -122,7 +124,7 @@
           <Query id="14">
             <FactVariable>ORDER_VALUE</FactVariable>
             <AggregateFunction>AVG</AggregateFunction>
-            <GroupBy join="SALESPERSONKEY">
+            <GroupBy join="SALESPERSONKEY" table="SALESPERSON">
               <Group>SALESPERSONTYPE</Group>
             </GroupBy>
           </Query>

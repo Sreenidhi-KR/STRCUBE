@@ -115,6 +115,8 @@ public class QueryProcessing {
             String[] queryIdList = new String[queryList.getLength()];
             String[] queryAggregateFunctionList = new String[queryList.getLength()];
             String[] queryFactVariableList= new String[queryList.getLength()];
+            String[] joinKeyList= new String[queryList.getLength()];
+            String[] tableList= new String[queryList.getLength()];
             boolean[] hasGroupBy= new boolean[queryList.getLength()];
 
             for(int i=0;i<queryList.getLength();i++){
@@ -122,8 +124,12 @@ public class QueryProcessing {
                 queryIdList[i]=query.getAttribute("id");
                 queryFactVariableList[i] = query.getElementsByTagName("FactVariable").item(0).getTextContent();
                 queryAggregateFunctionList[i] = query.getElementsByTagName("AggregateFunction").item(0).getTextContent();
-                if(query.getElementsByTagName("GroupBy").getLength()>0)
-                    hasGroupBy[i]=true;
+                if(query.getElementsByTagName("GroupBy").getLength()>0) {
+                    hasGroupBy[i] = true;
+                    Element temp = (Element) query.getElementsByTagName("GroupBy").item(0);
+                    joinKeyList[i]=temp.getAttribute("join");
+                    tableList[i]=temp.getAttribute("table");
+                }
                 else
                     hasGroupBy[i]=false;
 //                System.out.println(queryIdList[i] +" "+queryFactVariableList[i]+" "+ queryAggregateFunctionList[i]+" "+hasGroupBy[i]);
@@ -132,9 +138,9 @@ public class QueryProcessing {
 
             String insert[] =new String[queryList.getLength()];
             String header="";
-            for(int i=0;i<columnNames.length-2;i++){
+            for(int i=0;i<columnNames.length-4;i++){
                 header+=columnNames[i];
-                if(i<columnNames.length-3)
+                if(i<columnNames.length-5)
                     header+=",";
             }
 //            System.out.println(header);
@@ -143,10 +149,10 @@ public class QueryProcessing {
                 if(!hasGroupBy[i])
                     insert[i]="INSERT INTO Summary ("+header+") VALUES ("+queryIdList[i]+",'"+queryFactVariableList[i]+"','"+queryAggregateFunctionList[i]+"')";
                 else {
-                    insert[i] = "INSERT INTO Summary (" + header + ",Group_Id) VALUES (" + queryIdList[i] + ",'" + queryFactVariableList[i] + "','" + queryAggregateFunctionList[i] + "'," + groupById + ")";
+                    insert[i] = "INSERT INTO Summary (" + header + ",Group_Id,Join_Key,Table_Name) VALUES (" + queryIdList[i] + ",'" + queryFactVariableList[i] + "','" + queryAggregateFunctionList[i] + "'," + groupById +",'"+joinKeyList[i]+"','"+tableList[i]+"')";
                 groupById++;
                 }
-//                    System.out.println(insert[i]);
+                    System.out.println(insert[i]);
             }
 
 
