@@ -23,6 +23,8 @@ public class NewStreamProcessing {
     /* Offset: Stores Number of Bytes to Skip to get to Start of Window... */
     public static int Offset = 0;
 
+    public static int curr = 0;
+
     public NewStreamProcessing() throws FileNotFoundException {
     }
 
@@ -104,11 +106,15 @@ public class NewStreamProcessing {
         int finalVelocity = Velocity;
         int finalSize = Size;
         String[] finalColumnTypes = columnTypes;
+        curr = finalSize;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    SlidingWindow(conn, header, finalCsvFile, finalVelocity, finalSize, finalColumnTypes);
+                    int newRows=0;
+                    newRows = SlidingWindow(conn, header, finalCsvFile, finalVelocity, finalSize, finalColumnTypes);
+                    System.out.println("New Lines Added: "+ newRows);
+                    //Perform Query Processing here onwards...
                 } catch (IOException | SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -116,7 +122,7 @@ public class NewStreamProcessing {
         }, 0, TimeClick);
     }
     /* Sliding Window Method Definition... */
-    public static void SlidingWindow(Connection conn, String header, File csvFile, int Velocity, int Size, String[] columnTypes) throws IOException, SQLException {
+    public static int SlidingWindow(Connection conn, String header, File csvFile, int Velocity, int Size, String[] columnTypes) throws IOException, SQLException {
         System.out.println("...............................");
         System.out.println("[Clearing fact table...]");
         // Preparing to Truncate Table: FactTable (Simply Drops and Creates)
@@ -168,5 +174,8 @@ public class NewStreamProcessing {
             byte[] lineBytes = csvLine.getBytes(StandardCharsets.UTF_8);
             Offset += lineBytes.length + 1;
         }
+        int curRows = curr;
+        curr = avail;
+        return curRows;
     }
 }
