@@ -79,7 +79,7 @@ public class QueryProcessing {
                 }
             }
             sql += ")";
-//            System.out.println(sql);
+            System.out.println(sql);
 
 //            String altersql="alter table Summary add constraint fk_group_id FOREIGN KEY (Group_id) REFERENCES GroupByMapping(id)";
 
@@ -152,7 +152,7 @@ public class QueryProcessing {
                     insert[i] = "INSERT INTO Summary (" + header + ",Group_Id,Join_Key,Table_Name) VALUES (" + queryIdList[i] + ",'" + queryFactVariableList[i] + "','" + queryAggregateFunctionList[i] + "'," + groupById +",'"+joinKeyList[i]+"','"+tableList[i]+"')";
                 groupById++;
                 }
-                    System.out.println(insert[i]);
+//                    System.out.println(insert[i]);
             }
 
 
@@ -178,7 +178,7 @@ public class QueryProcessing {
                         temp+=listOfGroup.item(j).getTextContent()+" VARCHAR(255) NOT NULL";
                             temp+=",";
                         }
-                    temp+=" RESULT DECIMAL DEFAULT 0)";
+                    temp+=" RESULT DECIMAL(5,5) DEFAULT 0)";
                     createTable.add(temp);
 
                     groupById++;
@@ -201,6 +201,7 @@ public class QueryProcessing {
 
                 stmt.executeUpdate(groupsql);
                 System.out.println("[ Table GroupByMapping created successfully... ]");
+
 
                 stmt.executeUpdate(sql);
                 System.out.println("[ Table Summary created successfully... ]");
