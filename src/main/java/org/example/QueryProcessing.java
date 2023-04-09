@@ -251,8 +251,8 @@ public class QueryProcessing {
 
                 stmt.executeUpdate(alterlogsql);
                 for(int i=0;i<insert.length;i++){
-                    System.out.println(insert[i]);
-//                    stmt.executeUpdate(insert[i]);
+//                    System.out.println(insert[i]);
+                    stmt.executeUpdate(insert[i]);
                 }
                 for(int i=0;i<insertGroupBy.size();i++){
                     System.out.println(insertGroupBy.get(i));
