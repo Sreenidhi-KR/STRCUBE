@@ -41,8 +41,8 @@
             <SummaryItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</SummaryItem>
             <SummaryItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</SummaryItem>
             <SummaryItem type="INTEGER" property="">Group_Id</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="DEFAULT 0">Join_Key</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="DEFAULT 0">Table_Name</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="">Join_Key</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="">Table_Name</SummaryItem>
             <SummaryItem type="DECIMAL" property="DEFAULT 0">Result</SummaryItem>
           </SummaryProperties>
           <GroupProperties>
