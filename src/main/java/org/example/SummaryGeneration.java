@@ -23,14 +23,9 @@ public class SummaryGeneration {
         try{
             // Establish a connection to the database
              conn = DriverManager.getConnection(url, username, password);
-
-            // Create a statement for executing SQL queries
              stmt = conn.createStatement();
-
-            // Execute a SELECT query and get the result set
              rs = stmt.executeQuery("SELECT * FROM Summary");
 
-            // Loop through the result set and process each row
             while (rs.next()) {
                 int queryId = rs.getInt("Query_Id");
                 String factVariable = rs.getString("Fact_Variable");
@@ -42,8 +37,6 @@ public class SummaryGeneration {
                     isGrouped = true;
                 Double result = rs.getDouble("Result");
 
-
-                // Process the data here
                 System.out.println(queryId + ", " + factVariable + ", " + aggregateFunction + ", " + groupId + ", " + result);
 
                 if (isGrouped) {
@@ -56,15 +49,10 @@ public class SummaryGeneration {
                         groupByColumns.append(groupByColumnsRs.getString("Attribute")).append(" ,");
                     }
                     groupByColumns.deleteCharAt(groupByColumns.length() - 1);
-                    //take Group_Id and get groupby columns from GroupByMapping table
-
                     String queryStmt = "with mergetable as (select * , ROW_NUMBER() OVER () AS rn From FactTable natural join " + joinTable + " order by rn desc limit "+ noOfNewRows+ " ) select "+ groupByColumns.toString()+ " , " +  aggregateFunction + "(" + factVariable + ")   from mergetable group by " + groupByColumns.toString() + " ;";
                     System.out.println(queryStmt);
                     ResultSet queryRs = null;
                     queryRs = groupStmt2.executeQuery(queryStmt);
-
-
-
                     String updateStmt = " ";
                     String table = "GroupByResultQueryId_" +queryId;
                     if(aggregateFunction.equals("SUM") || aggregateFunction.equals("COUNT")){
@@ -79,9 +67,8 @@ public class SummaryGeneration {
                     }
                     else if(aggregateFunction.equals("AVG")){
                         //WRONG
-                        updateStmt = "Result = Result + ?";
+                        updateStmt = "Result = ?";
                     }
-
 
                     ResultSetMetaData metaData = queryRs.getMetaData();
                     int numColumns = metaData.getColumnCount();
@@ -98,10 +85,8 @@ public class SummaryGeneration {
                         }
                     }
 //
-                    String sql = "UPDATE " + table+ " SET " + updateStmt + " WHERE " + whereClause.toString();
-                    //System.out.println(sql);
-
-                    PreparedStatement statement = conn.prepareStatement(sql);
+                    String updateQuery = "UPDATE " + table+ " SET " + updateStmt + " WHERE " + whereClause.toString();
+                    PreparedStatement statement = conn.prepareStatement(updateQuery);
 
                     while (queryRs.next()) {
 
@@ -117,14 +102,11 @@ public class SummaryGeneration {
 
                     statement.executeBatch();
                 } else {
-
                     stmt2 = conn.createStatement();
                     String insertStmt = "SELECT " + aggregateFunction + "(" + factVariable + ") FROM ( SELECT *, ROW_NUMBER() OVER () AS rn FROM FactTable ORDER BY rn DESC limit " + noOfNewRows + ") result";
                     r = stmt2.executeQuery(insertStmt);
                     if (r.next()) {
-                        // Get the value of the aggregate function for the first (and only) row
                         double resultValue = r.getDouble(1);
-                        // Do something with the result value, such as printing it to the console
                         System.out.println("Result value: " + resultValue);
                         String updateStmt = " ";
                         if(aggregateFunction.equals("SUM") || aggregateFunction.equals("COUNT")){
@@ -139,7 +121,7 @@ public class SummaryGeneration {
                         }
                         else if(aggregateFunction.equals("AVG")){
                             //WRONG
-                            updateStmt = "UPDATE Summary SET Result = Result + ? WHERE Query_Id = ?";
+                            updateStmt = "UPDATE Summary SET Result = ? WHERE Query_Id = ?";
                         }
 
                         PreparedStatement pstmt = conn.prepareStatement(updateStmt);
