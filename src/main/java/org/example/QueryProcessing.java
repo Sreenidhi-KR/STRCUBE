@@ -217,7 +217,7 @@ public class QueryProcessing {
                         temp += listOfGroup.item(j).getTextContent() + " VARCHAR(255) NOT NULL";
                         temp += ",";
                     }
-                    temp += " RESULT DECIMAL(5,5) DEFAULT 0)";
+                    temp += " RESULT DECIMAL(15,5) DEFAULT 0)";
                     createTable.add(temp);
 
                     groupById++;

@@ -43,7 +43,7 @@
             <SummaryItem type="INTEGER" property="">Group_Id</SummaryItem>
             <SummaryItem type="VARCHAR(255)" property="">Join_Key</SummaryItem>
             <SummaryItem type="VARCHAR(255)" property="">Table_Name</SummaryItem>
-            <SummaryItem type="DECIMAL(5,5)" property="DEFAULT 0">Result</SummaryItem>
+            <SummaryItem type="DECIMAL(15,5)" property="DEFAULT 0">Result</SummaryItem>
           </SummaryProperties>
           <GroupProperties>
             <GroupItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Id</GroupItem>
@@ -57,7 +57,7 @@
           <LogItem type="INTEGER" property="NOT NULL">Query_Id</LogItem>
           <LogItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</LogItem>
           <LogItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</LogItem>
-          <LogItem type="DECIMAL(5,5)" property="NOT NULL">Window_Result</LogItem>
+          <LogItem type="DECIMAL(15,5)" property="NOT NULL">Window_Result</LogItem>
         </Log>
       </Storageproperties>
       <QueryRepositories>
