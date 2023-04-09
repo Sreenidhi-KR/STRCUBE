@@ -179,6 +179,9 @@ public class QueryProcessing {
                 }
             }
 
+
+            String minsql="update Summary set Result="+Integer.MAX_VALUE+" where Aggregate_Function='MIN'";
+            System.out.println(minsql);
 //            for(String s:insertGroupBy){
 //                System.out.println(s);
 //            }   for(String s:createTable){
@@ -187,7 +190,8 @@ public class QueryProcessing {
 
 
             try (Connection conn = DriverManager.getConnection(url, username, password);
-                 Statement stmt = conn.createStatement()) {
+                 Statement stmt = conn.createStatement();
+                 ) {
 
                 stmt.executeUpdate(groupsql);
                 System.out.println("[ Table GroupByMapping created successfully... ]");
@@ -212,6 +216,7 @@ public class QueryProcessing {
                     System.out.println(createTable.get(i));
                     stmt.executeUpdate(createTable.get(i));
                 }
+                stmt.executeUpdate(minsql);
 
             } catch (SQLException e) {
                 e.printStackTrace();
