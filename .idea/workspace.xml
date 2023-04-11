@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated NewStreamProcessing.java - Returns No. of New Rows that were added in current window...">
+    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated: Latest NewStreamProcessing.java - Returns No. of New Rows that were added in current window">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/NewStreamProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/NewStreamProcessing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dimensions/DMInstance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dimensions/DMInstance.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/facts/stream.csv" beforeDir="false" afterPath="$PROJECT_DIR$/facts/stream.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DBConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/DBConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +43,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/boppanavenkatesh/Downloads/DataModeling&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -111,7 +115,12 @@
       <workItem from="1680590925185" duration="64000" />
       <workItem from="1680601440483" duration="165000" />
       <workItem from="1680723001949" duration="2937000" />
-      <workItem from="1680967338558" duration="4398000" />
+      <workItem from="1680967338558" duration="9315000" />
+      <workItem from="1681066993889" duration="2968000" />
+      <workItem from="1681098172418" duration="706000" />
+      <workItem from="1681099898459" duration="1830000" />
+      <workItem from="1681101855869" duration="4134000" />
+      <workItem from="1681234835766" duration="1010000" />
     </task>
     <task id="LOCAL-00001" summary="README.md">
       <created>1679554747117</created>
@@ -183,7 +192,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680971830808</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Updated: Latest NewStreamProcessing.java - Returns No. of New Rows that were added in current window">
+      <created>1680975340624</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1680975340624</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -210,6 +226,7 @@
     <MESSAGE value="Updated DB Config to VM" />
     <MESSAGE value="Modified XML Instance For Query Processing..." />
     <MESSAGE value="Updated NewStreamProcessing.java - Returns No. of New Rows that were added in current window..." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated NewStreamProcessing.java - Returns No. of New Rows that were added in current window..." />
+    <MESSAGE value="Updated: Latest NewStreamProcessing.java - Returns No. of New Rows that were added in current window" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated: Latest NewStreamProcessing.java - Returns No. of New Rows that were added in current window" />
   </component>
 </project>

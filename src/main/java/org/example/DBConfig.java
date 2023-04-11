@@ -1,8 +1,8 @@
 package org.example;
 
 public class DBConfig {
-    String url = "jdbc:mysql://172.16.201.190:3306/STRCUBE?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
-    String username = "venkatesh"; // replace with your username
+    String url = "jdbc:mysql://localhost:3306/STRCUBE?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false&createDatabaseIfNotExist=true";
+    String username = "root"; // replace with your username
     String password = "KVrsmck@21"; // replace with your password
 
 
