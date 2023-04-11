@@ -27,85 +27,108 @@ public class SummaryGeneration {
 
     private Connection conn;
 
-    public void compareTables(String queryId, String aggregateFunction , ResultSet rsNew) throws SQLException {
-        Statement stmtOld = conn.createStatement();
+    public void updateQueryResult(String queryId, String aggregateFunction , ResultSet rs , Timestamp timestamp) throws SQLException {
+        Statement stmt = conn.createStatement();
         String QUERY_TABLE_NAME = "QUERY_RESULT_"+queryId;
-        ResultSetMetaData rsmd = rsNew.getMetaData();
+        ResultSetMetaData rsMetaData = rs.getMetaData();
         StringJoiner columnDefs = new StringJoiner(", ");
 
-        int columnCount = rsmd.getColumnCount();
+        int columnCount = rsMetaData.getColumnCount();
         String[] columnNames = new String[columnCount];
         for (int i = 1; i <= columnCount; i++) {
-            columnNames[i - 1] = rsmd.getColumnName(i);
-            String name = rsmd.getColumnName(i);
-            String type = rsmd.getColumnTypeName(i);
-            int length = rsmd.getColumnDisplaySize(i);
+            columnNames[i - 1] = rsMetaData.getColumnName(i);
+            String name = rsMetaData.getColumnName(i);
+            String type = rsMetaData.getColumnTypeName(i);
+            int length = rsMetaData.getColumnDisplaySize(i);
             columnDefs.add(name + " " + type + "(" + length + ")");
         }
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS " + QUERY_TABLE_NAME + " ( id INT AUTO_INCREMENT PRIMARY KEY , " + columnDefs.toString() + ")";
+        String createTableQuery = "CREATE TABLE IF NOT EXISTS " + QUERY_TABLE_NAME + " ( id INT AUTO_INCREMENT PRIMARY KEY , " + columnDefs + ")";
         System.out.println(createTableQuery);
         Statement stmtCreate = conn.createStatement();
         stmtCreate.executeUpdate(createTableQuery);
 
-        while (rsNew.next()) {
+        while (rs.next()) {
             String[] values = new String[columnCount];
             for (int i = 0; i < values.length; i++) {
-                values[i] = rsNew.getString(i+1);
+                values[i] = rs.getString(i+1);
             }
-            System.out.println("SELECT * FROM " + QUERY_TABLE_NAME + " WHERE " + getWhereClause(values, rsNew));
-            ResultSet rsOld = stmtOld.executeQuery("SELECT * FROM " + QUERY_TABLE_NAME + " WHERE " + getWhereClause(values, rsNew));
+            System.out.println("SELECT * FROM " + QUERY_TABLE_NAME + " WHERE " + getWhereClause(values, rs));
+            ResultSet rsOld = stmt.executeQuery("SELECT * FROM " + QUERY_TABLE_NAME + " WHERE " + getWhereClause(values, rs));
             if (rsOld.next()) {
-                System.out.println("Row found in old table: ");
-                String result = rsNew.getString("result");
+                System.out.println("Row found in query table: ");
+                String result = rs.getString("result");
                 int id = rsOld.getInt("id");
-                //set update condition
                 String updateStmt ="";
-                if(aggregateFunction.equals("SUM") || aggregateFunction.equals("COUNT")){
-                    updateStmt = "Result = Result + ?";
-                } else if (aggregateFunction.equals("MIN")) {
-
-                    updateStmt = "Result = LEAST(Result , ?)";
-                }
-                else if (aggregateFunction.equals("MAX")) {
-
-                    updateStmt = "Result = GREATEST(Result , ?)";
-                }
-                else if(aggregateFunction.equals("AVG")){
-                    //WRONG
-                    updateStmt = "Result = ?";
+                switch (aggregateFunction) {
+                    case "SUM", "COUNT" -> updateStmt = "Result = Result + ?";
+                    case "MIN" -> updateStmt = "Result = LEAST(Result , ?)";
+                    case "MAX" -> updateStmt = "Result = GREATEST(Result , ?)";
+                    case "AVG" -> {
+                        //TODO
+                        String todo;
+                        updateStmt = "Result = ?";
+                    }
                 }
                 PreparedStatement stmtUpdate = conn.prepareStatement("UPDATE " + QUERY_TABLE_NAME + " SET " + updateStmt+" WHERE id=?");
                 stmtUpdate.setString(1, result);
                 stmtUpdate.setInt(2, id);
-                System.out.println(stmtUpdate.toString());
+                System.out.println(stmtUpdate);
                 stmtUpdate.executeUpdate();
             } else {
-                System.out.println("Row not found in old table: ");
-                String insertQuery = "INSERT INTO " + QUERY_TABLE_NAME + " (" + String.join(", ", columnNames) + ") VALUES (";
+                System.out.println("Row not found in query table: ");
+                StringBuilder insertQuery = new StringBuilder("INSERT INTO " + QUERY_TABLE_NAME + " (" + String.join(", ", columnNames) + ") VALUES (");
                 for (int i = 0; i < values.length; i++) {
-                    insertQuery += "'" + values[i] + "'";
+                    insertQuery.append("'").append(values[i]).append("'");
                     if (i < values.length - 1) {
-                        insertQuery += ",";
+                        insertQuery.append(",");
                     }
                 }
-                insertQuery += ")";
-                PreparedStatement stmtInsert = conn.prepareStatement(insertQuery);
+                insertQuery.append(")");
+                PreparedStatement stmtInsert = conn.prepareStatement(insertQuery.toString());
                 System.out.println(stmtInsert.toString());
                 stmtInsert.executeUpdate();
+
             }
         }
+        generateLog(queryId,timestamp);
     }
 
+
+    public void generateLog(String queryId, Timestamp timestamp) throws SQLException {
+        String QUERY_TABLE_NAME = "QUERY_RESULT_"+queryId;
+        String LOG_TABLE_NAME = "QUERY_LOG_"+queryId;
+        DatabaseMetaData metadata = conn.getMetaData();
+        ResultSet resultSet = metadata.getTables(null, null, LOG_TABLE_NAME, null);
+        boolean tableExists = resultSet.next();
+        if(!tableExists){
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS " + LOG_TABLE_NAME + " AS SELECT * , ? as timestamp FROM "+QUERY_TABLE_NAME;
+            System.out.println(createTableQuery);
+            PreparedStatement prepStmt = conn.prepareStatement(createTableQuery);
+            prepStmt.setTimestamp(1, timestamp);
+            prepStmt.executeUpdate();
+            return;
+        }
+
+        String updateTableQuery = "INSERT INTO " + LOG_TABLE_NAME + "  SELECT * , ? as timestamp FROM "+QUERY_TABLE_NAME;
+        System.out.println(updateTableQuery);
+        PreparedStatement prepStmt = conn.prepareStatement(updateTableQuery);
+        prepStmt.setTimestamp(1, timestamp);
+        prepStmt.executeUpdate();
+
+    }
+
+
+
     private String getWhereClause(String[] values , ResultSet rsNew) throws SQLException {
-        String whereClause = "";
+        StringBuilder whereClause = new StringBuilder();
         for (int i = 0; i < values.length; i++) {
             String columnName = rsNew.getMetaData().getColumnName(i+1);
             if (columnName.equals("result")) {
                 continue; // skip "result" column
             }
-            whereClause += (whereClause.isEmpty() ? "" : " AND ") + columnName + "='" + values[i] + "'";
+            whereClause.append((whereClause.length() == 0) ? "" : " AND ").append(columnName).append("='").append(values[i]).append("'");
         }
-        return whereClause;
+        return whereClause.toString();
     }
 
     public static List<Element> getQueries() {
@@ -138,6 +161,7 @@ public class SummaryGeneration {
         ResultSet rs = null;
         Statement stmt = null;
         Connection conn = null;
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         try{
             conn = DriverManager.getConnection(url, username, password);
             SummaryGeneration summaryGeneration = new SummaryGeneration(conn);
@@ -153,7 +177,7 @@ public class SummaryGeneration {
                 System.out.println("Fact Variable: " + factVariable);
                 System.out.println("Query Script: " + queryScript);
                 rs = stmt.executeQuery(queryScript);
-                summaryGeneration.compareTables(queryId , aggregateFunction, rs);
+                summaryGeneration.updateQueryResult(queryId , aggregateFunction, rs , timestamp);
                 System.out.println();
             }
 
@@ -161,11 +185,13 @@ public class SummaryGeneration {
             e.printStackTrace();
         } finally {
             try {
+                assert rs != null;
                 rs.close();
                 stmt.close();
                 conn.close();
+            } catch (Exception ignored) {
 
-            } catch (Exception e) {}
+            }
 
         }
 
