@@ -146,22 +146,26 @@
           </Query>
         </QueryRepo>
         <QueryRepo type="generic">
-<!--          You can skip FactVariable If Not Needed-->
           <Query id="q1">
             <AggregateFunction>SUM</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
             <QueryScript>select CUSTOMERCITY ,CUSTOMERTYPE  , SUM(SALE_UNITS) as result  from MergeView group by CUSTOMERCITY ,CUSTOMERTYPE</QueryScript>
           </Query>
           <Query id="q2">
-            <AggregateFunction>SUM</AggregateFunction>
+            <AggregateFunction>COUNT</AggregateFunction>
             <FactVariable>ORDER_VALUE</FactVariable>
-            <QueryScript>select CATEGORY, SUM(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>
+            <QueryScript>select CATEGORY, COUNT(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>
           </Query>
 <!--          Main Query-->
           <Query id="q3">
-            <AggregateFunction>AVG</AggregateFunction>
+            <AggregateFunction>MIN</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
-            <QueryScript>select SALESPERSONTYPE, AVG(SALE_UNITS) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
+            <QueryScript>select SALESPERSONTYPE, MIN(SALE_UNITS) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
+          </Query>
+          <Query id="q4">
+            <AggregateFunction>MAX</AggregateFunction>
+            <FactVariable>SALE_UNITS</FactVariable>
+            <QueryScript>select SALESPERSONTYPE, MAX(SALE_UNITS) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
           </Query>
         </QueryRepo>
       </QueryRepositories>

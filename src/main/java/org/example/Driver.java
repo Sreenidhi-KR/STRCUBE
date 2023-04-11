@@ -11,8 +11,8 @@ public class Driver {
         Dimproc.GenerateDTs(dimensionsDirectory, xmlFileName);
         FactTableProcessing factTableProcessing=new FactTableProcessing();
         factTableProcessing.GenerateFT(dimensionsDirectory,xmlFileName);
-        QueryProcessing queryProcessing=new QueryProcessing();
-        queryProcessing.GenerateSummary();
+//        QueryProcessing queryProcessing=new QueryProcessing();
+//        queryProcessing.GenerateSummary();
 //        StreamProcessing streamProcessing = new StreamProcessing();
 //        streamProcessing.start(factsDirectory,dimensionsDirectory,xmlFileName);
         /* Sliding Window Implementation... */

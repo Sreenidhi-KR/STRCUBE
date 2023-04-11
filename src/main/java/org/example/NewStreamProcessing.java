@@ -8,10 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Timer;
 import java.util.TimerTask;
 public class NewStreamProcessing {
@@ -108,15 +105,21 @@ public class NewStreamProcessing {
         int finalSize = Size;
         String[] finalColumnTypes = columnTypes;
         curr = finalSize;
+        String joinTables = getDimentionTables();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
                     int newRows=0;
                     newRows = SlidingWindow(conn, header, finalCsvFile, finalVelocity, finalSize, finalColumnTypes);
+
+                    String createBaseViewQuery =
+                    "CREATE OR REPLACE VIEW  MergeView as with filterFactTable as (select * , ROW_NUMBER()  OVER () AS rn from FactTable order by rn desc limit " + newRows+ ") Select * from filterFactTable "+joinTables;
+                    System.out.println(createBaseViewQuery);
+                    Statement createMergeViewStmt = conn.createStatement();
+                    createMergeViewStmt.executeUpdate(createBaseViewQuery);
                     System.out.println("New Lines Added: "+ newRows);
-                    //Perform Query Processing here onwards...
-                    summaryGeneration.generateSummary(newRows);
+                    summaryGeneration.generateSummary();
 
                 } catch (IOException | SQLException e) {
                     throw new RuntimeException(e);
@@ -124,6 +127,21 @@ public class NewStreamProcessing {
             }
         }, 0, TimeClick);
     }
+
+    public static String getDimentionTables() throws SQLException {
+        Connection conn = DriverManager.getConnection(url,username,password);
+        Statement dimensionTables = conn.createStatement();
+        StringBuilder joinTables = new StringBuilder("");
+        ResultSet rsTables = dimensionTables.executeQuery("SELECT * FROM dimensiontables");
+        while (rsTables.next()) {
+            String tableName = rsTables.getString("DimensionTable");
+            joinTables.append(" NATURAL JOIN " + tableName);
+        }
+        return  joinTables.toString();
+
+    }
+
+
     /* Sliding Window Method Definition... */
     public static int SlidingWindow(Connection conn, String header, File csvFile, int Velocity, int Size, String[] columnTypes) throws IOException, SQLException {
         System.out.println("...............................");
