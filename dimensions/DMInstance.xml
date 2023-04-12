@@ -58,7 +58,7 @@
         </Log>
       </Storageproperties>
       <QueryRepositories>
-        <QueryRepo type="Aggregate">
+        <QueryRepo type="aggregate">
 <!--          Performs all these aggregate operations on those fact variables-->
           <AggregateFunctions>
             <AggregateFunction>SUM</AggregateFunction>

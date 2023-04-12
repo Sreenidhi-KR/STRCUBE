@@ -250,6 +250,7 @@ public class SummaryGeneration {
                     ResultSet queryRs = queryStmt.executeQuery(queryScript);
                     System.out.println(queryScript);
                     summaryGeneration.updateAggregationResult(queryId, queryRs);
+                    summaryGeneration.generateLog(queryId, timestamp);
 
                 }
             }
