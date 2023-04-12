@@ -39,6 +39,7 @@
           <SummaryProperties>
             <SummaryItem type="VARCHAR(255)" property="PRIMARY KEY">Query_Id</SummaryItem>
             <SummaryItem type="VARCHAR(255)" property="NOT NULL">Type</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Query</SummaryItem>
             <SummaryItem type="VARCHAR(255)" property="NOT NULL">Result_Table</SummaryItem>
           </SummaryProperties>
           <GroupProperties>

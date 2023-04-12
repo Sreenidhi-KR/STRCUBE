@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated: DMInstance.xml TO GENERATE SUMMARY TABLE">
+    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated: DMInstance.xml to add QUERY LABELS">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dimensions/DMInstance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dimensions/DMInstance.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/QueryProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/QueryProcessing.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +125,7 @@
       <workItem from="1681287627176" duration="673000" />
       <workItem from="1681288424791" duration="59000" />
       <workItem from="1681306131376" duration="59000" />
-      <workItem from="1681307567338" duration="2947000" />
+      <workItem from="1681307567338" duration="4451000" />
     </task>
     <task id="LOCAL-00001" summary="README.md">
       <created>1679554747117</created>
@@ -231,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681288265441</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Updated: DMInstance.xml to add QUERY LABELS">
+      <created>1681310952933</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1681310952933</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -262,6 +270,7 @@
     <MESSAGE value="Updated: DMInstance.xml to add Generic Queries..." />
     <MESSAGE value="Updated: DMInstance.xml to modify aggregate queries" />
     <MESSAGE value="Updated: DMInstance.xml TO GENERATE SUMMARY TABLE" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated: DMInstance.xml TO GENERATE SUMMARY TABLE" />
+    <MESSAGE value="Updated: DMInstance.xml to add QUERY LABELS" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated: DMInstance.xml to add QUERY LABELS" />
   </component>
 </project>
