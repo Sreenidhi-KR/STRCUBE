@@ -70,13 +70,13 @@
             <AggregateFunction>MIN</AggregateFunction>
             <AggregateFunction>MAX</AggregateFunction>
           </AggregateFunctions>
-          <Query id="1">
+          <Query id="a1">
             <FactVariable>SALE_UNITS</FactVariable>
           </Query>
-          <Query id="2">
+          <Query id="a2">
             <FactVariable>COST_VALUE</FactVariable>
           </Query>
-          <Query id="3">
+          <Query id="a3">
             <FactVariable>ORDER_VALUE</FactVariable>
           </Query>
         </QueryRepo>
@@ -88,10 +88,9 @@
           </Query>
           <Query id="q2">
             <AggregateFunction>COUNT</AggregateFunction>
-            <FactVariable>ORDER_VALUE</FactVariable>
-            <QueryScript>select CATEGORY, COUNT(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>
+            <FactVariable>SALE_UNITS</FactVariable>
+            <QueryScript>select CATEGORY, COUNT(SALE_UNITS) as result  from MergeView group by CATEGORY</QueryScript>
           </Query>
-<!--          Main Query-->
           <Query id="q3">
             <AggregateFunction>MIN</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
@@ -101,6 +100,26 @@
             <AggregateFunction>MAX</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
             <QueryScript>select SALESPERSONTYPE, MAX(SALE_UNITS) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
+          </Query>
+          <Query id="q5">
+            <AggregateFunction>MAX</AggregateFunction>
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <QueryScript>select CUSTOMERCITY ,CUSTOMERTYPE  , MAX(ORDER_VALUE) as result  from MergeView group by CUSTOMERCITY ,CUSTOMERTYPE</QueryScript>
+          </Query>
+          <Query id="q6">
+            <AggregateFunction>AVG</AggregateFunction>
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <QueryScript>select CATEGORY, AVG(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>
+          </Query>
+          <Query id="q7">
+            <AggregateFunction>AVG</AggregateFunction>
+            <FactVariable>COST_VALUE</FactVariable>
+            <QueryScript>select SALESPERSONTYPE, AVG(COST_VALUE) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
+          </Query>
+          <Query id="q8">
+            <AggregateFunction>MIN</AggregateFunction>
+            <FactVariable>COST_VALUE</FactVariable>
+            <QueryScript>select SALESPERSONTYPE, MIN(COST_VALUE) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
           </Query>
         </QueryRepo>
       </QueryRepositories>
