@@ -6,7 +6,7 @@
         <DataSource DS_id="DS-01">
           <WindowStorageProperties>
             <size units="rows">5</size>
-            <time units="seconds">60</time>
+            <time units="seconds">10</time>
             <velocity units="rows">3</velocity>
             <type>sliding</type>
             <origin>latest</origin>
@@ -62,87 +62,22 @@
       </Storageproperties>
       <QueryRepositories>
         <QueryRepo type="Aggregate">
+<!--          Performs all these aggregate operations on those fact variables-->
+          <AggregateFunctions>
+            <AggregateFunction>SUM</AggregateFunction>
+            <AggregateFunction>COUNT</AggregateFunction>
+            <AggregateFunction>AVG</AggregateFunction>
+            <AggregateFunction>MIN</AggregateFunction>
+            <AggregateFunction>MAX</AggregateFunction>
+          </AggregateFunctions>
           <Query id="1">
             <FactVariable>SALE_UNITS</FactVariable>
-            <AggregateFunction>SUM</AggregateFunction>
           </Query>
           <Query id="2">
-            <FactVariable>SALE_UNITS</FactVariable>
-            <AggregateFunction>SUM</AggregateFunction>
-            <GroupBy join="CUSTOMERKEY" table="CUSTOMER">
-              <Group>CUSTOMERCITY</Group>
-              <Group>CUSTOMERTYPE</Group>
-            </GroupBy>
+            <FactVariable>COST_VALUE</FactVariable>
           </Query>
           <Query id="3">
-            <FactVariable>SALE_UNITS</FactVariable>
-            <AggregateFunction>COUNT</AggregateFunction>
-          </Query>
-          <Query id="4">
-            <FactVariable>SALE_UNITS</FactVariable>
-            <AggregateFunction>AVG</AggregateFunction>
-          </Query>
-          <Query id="5">
-            <FactVariable>SALE_UNITS</FactVariable>
-            <AggregateFunction>MIN</AggregateFunction>
-          </Query>
-          <Query id="6">
-            <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>MAX</AggregateFunction>
-          </Query>
-          <Query id="7">
-            <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>SUM</AggregateFunction>
-          </Query>
-          <Query id="8">
-            <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>SUM</AggregateFunction>
-            <GroupBy join="PRODUCTKEY" table="PRODUCT">
-              <Group>CATEGORY</Group>
-            </GroupBy>
-          </Query>
-          <Query id="9">
-            <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>COUNT</AggregateFunction>
-          </Query>
-          <Query id="10">
-            <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>SUM</AggregateFunction>
-          </Query>
-          <Query id="11">
-            <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>MIN</AggregateFunction>
-          </Query>
-          <Query id="12">
-            <FactVariable>COST_VALUE</FactVariable>
-            <AggregateFunction>MAX</AggregateFunction>
-          </Query>
-          <Query id="13">
             <FactVariable>ORDER_VALUE</FactVariable>
-            <AggregateFunction>SUM</AggregateFunction>
-          </Query>
-          <Query id="14">
-            <FactVariable>ORDER_VALUE</FactVariable>
-            <AggregateFunction>MAX</AggregateFunction>
-            <GroupBy join="SALESPERSONKEY" table="SALESPERSON">
-              <Group>SALESPERSONTYPE</Group>
-            </GroupBy>
-          </Query>
-          <Query id="15">
-            <FactVariable>ORDER_VALUE</FactVariable>
-            <AggregateFunction>COUNT</AggregateFunction>
-          </Query>
-          <Query id="16">
-            <FactVariable>ORDER_VALUE</FactVariable>
-            <AggregateFunction>AVG</AggregateFunction>
-          </Query>
-          <Query id="17">
-            <FactVariable>ORDER_VALUE</FactVariable>
-            <AggregateFunction>MIN</AggregateFunction>
-          </Query>
-          <Query id="18">
-            <FactVariable>ORDER_VALUE</FactVariable>
-            <AggregateFunction>MAX</AggregateFunction>
           </Query>
         </QueryRepo>
         <QueryRepo type="generic">

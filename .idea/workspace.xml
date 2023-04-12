@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated: Latest NewStreamProcessing.java - Returns No. of New Rows that were added in current window">
+    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated: DMInstance.xml to add Generic Queries...">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dimensions/DMInstance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dimensions/DMInstance.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/facts/stream.csv" beforeDir="false" afterPath="$PROJECT_DIR$/facts/stream.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DBConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/DBConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +118,9 @@
       <workItem from="1681098172418" duration="706000" />
       <workItem from="1681099898459" duration="1830000" />
       <workItem from="1681101855869" duration="4134000" />
-      <workItem from="1681234835766" duration="1010000" />
+      <workItem from="1681234835766" duration="1957000" />
+      <workItem from="1681242940584" duration="2599000" />
+      <workItem from="1681276292694" duration="1569000" />
     </task>
     <task id="LOCAL-00001" summary="README.md">
       <created>1679554747117</created>
@@ -199,7 +199,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680975340624</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Updated: DMInstance.xml to add Generic Queries...">
+      <created>1681237580829</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1681237580829</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,6 +234,7 @@
     <MESSAGE value="Modified XML Instance For Query Processing..." />
     <MESSAGE value="Updated NewStreamProcessing.java - Returns No. of New Rows that were added in current window..." />
     <MESSAGE value="Updated: Latest NewStreamProcessing.java - Returns No. of New Rows that were added in current window" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated: Latest NewStreamProcessing.java - Returns No. of New Rows that were added in current window" />
+    <MESSAGE value="Updated: DMInstance.xml to add Generic Queries..." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated: DMInstance.xml to add Generic Queries..." />
   </component>
 </project>
