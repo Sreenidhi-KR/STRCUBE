@@ -70,7 +70,7 @@ public class SummaryGeneration {
                     }
                 }
                 PreparedStatement stmtUpdate = conn.prepareStatement("UPDATE " + QUERY_TABLE_NAME + " SET " + updateStmt+" WHERE id=?");
-                stmtUpdate.setString(1, result);
+                stmtUpdate.setInt(1, Integer.parseInt(result));
                 stmtUpdate.setInt(2, id);
                 System.out.println(stmtUpdate);
                 stmtUpdate.executeUpdate();
