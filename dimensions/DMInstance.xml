@@ -68,12 +68,15 @@
           </AggregateFunctions>
           <Query id="a1">
             <FactVariable>SALE_UNITS</FactVariable>
+            <QueryLabel>Aggregate Analytics of Sale Units</QueryLabel>
           </Query>
           <Query id="a2">
             <FactVariable>COST_VALUE</FactVariable>
+            <QueryLabel>Aggregate Analytics of Cost Value</QueryLabel>
           </Query>
           <Query id="a3">
             <FactVariable>ORDER_VALUE</FactVariable>
+            <QueryLabel>Aggregate Analytics of Order Value</QueryLabel>
           </Query>
         </QueryRepo>
         <QueryRepo type="generic">
@@ -81,36 +84,45 @@
             <AggregateFunction>SUM</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
             <QueryScript>select CUSTOMERCITY ,CUSTOMERTYPE  , SUM(SALE_UNITS) as result  from MergeView group by CUSTOMERCITY ,CUSTOMERTYPE</QueryScript>
+            <QueryLabel>Total Sale Units with respect to Customer City and Type of the Customer</QueryLabel>
           </Query>
           <Query id="q2">
             <AggregateFunction>COUNT</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
             <QueryScript>select CATEGORY, COUNT(SALE_UNITS) as result  from MergeView group by CATEGORY</QueryScript>
+            <QueryLabel>Total No. of Sale Units with respect to Product Category</QueryLabel>
           </Query>
           <Query id="q3">
             <AggregateFunction>MIN</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
             <QueryScript>select SALESPERSONTYPE, MIN(SALE_UNITS) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
+            <QueryLabel>Minimum Sale Units with respect to Type of the Sales Person</QueryLabel>
           </Query>
           <Query id="q4">
             <AggregateFunction>MAX</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
             <QueryScript>select SALESPERSONTYPE, MAX(SALE_UNITS) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
+            <QueryLabel>Maximum Sale Units with respect to Type of the Sales Person</QueryLabel>
           </Query>
           <Query id="q5">
             <AggregateFunction>MAX</AggregateFunction>
             <FactVariable>ORDER_VALUE</FactVariable>
             <QueryScript>select CUSTOMERCITY ,CUSTOMERTYPE  , MAX(ORDER_VALUE) as result  from MergeView group by CUSTOMERCITY ,CUSTOMERTYPE</QueryScript>
+            <QueryLabel>Maximum Order Value with respect to Customer City and Type of the Customer</QueryLabel>
           </Query>
 <!--          <Query id="q6">-->
 <!--            <AggregateFunction>AVG</AggregateFunction>-->
 <!--            <FactVariable>ORDER_VALUE</FactVariable>-->
-<!--            <QueryScript>select CATEGORY, AVG(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>-->
+<!--            <QueryScript>select CATEGORY, AVG(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>
+                <QueryLabel>Average Order Value with respect to Product Category</QueryLabel>
+-->
 <!--          </Query>-->
 <!--          <Query id="q7">-->
 <!--            <AggregateFunction>AVG</AggregateFunction>-->
 <!--            <FactVariable>COST_VALUE</FactVariable>-->
-<!--            <QueryScript>select SALESPERSONTYPE, AVG(COST_VALUE) as result  from MergeView group by SALESPERSONTYPE</QueryScript>-->
+<!--            <QueryScript>select SALESPERSONTYPE, AVG(COST_VALUE) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
+                <QueryLabel>Average Cost value with respect to Type of the Sales Person</QueryLabel>
+-->
 <!--          </Query>-->
 
           <!--  using WHERE clause      -->
@@ -118,6 +130,7 @@
             <AggregateFunction>MIN</AggregateFunction>
             <FactVariable>COST_VALUE</FactVariable>
             <QueryScript>select SALESPERSONTYPE, MIN(COST_VALUE) as result  from MergeView where SALESPERSONEXPERIENCE > 2 group by SALESPERSONTYPE</QueryScript>
+            <QueryLabel>Minimum Cost Value with respect to Type of the Sales Person where Sales Person with Experience more than 2 years to be considered.</QueryLabel>
           </Query>
         </QueryRepo>
       </QueryRepositories>
