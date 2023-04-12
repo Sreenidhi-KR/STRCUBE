@@ -7,9 +7,10 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class QueryProcessing {
     DBConfig dbConfig = new DBConfig();
@@ -19,38 +20,13 @@ public class QueryProcessing {
 
     public QueryProcessing() {
     }
-
     public void GenerateSummary() {
-        try {
+        try{
             File inputFile = new File("./dimensions/DMInstance.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(inputFile);
             doc.getDocumentElement().normalize();
-
-            NodeList groupItemList = doc.getElementsByTagName("GroupItem");
-            String[] groupcolumnNames = new String[groupItemList.getLength()];
-            String[] groupcolumnTypes = new String[groupItemList.getLength()];
-            String[] groupcolumnProperties = new String[groupItemList.getLength()];
-
-            for (int i = 0; i < groupItemList.getLength(); i++) {
-                Element summaryItem = (Element) groupItemList.item(i);
-                groupcolumnNames[i] = summaryItem.getTextContent();
-                groupcolumnTypes[i] = summaryItem.getAttribute("type");
-                groupcolumnProperties[i] = summaryItem.getAttribute("property");
-//                System.out.println(groupcolumnNames[i] + groupcolumnTypes[i]+ groupcolumnProperties[i]);
-            }
-
-            String groupsql = "CREATE TABLE GroupByMapping" + " (";
-            for (int j = 0; j < groupcolumnNames.length; j++) {
-                groupsql += groupcolumnNames[j] + " " + groupcolumnTypes[j] + " " + groupcolumnProperties[j];
-                if (j < groupcolumnNames.length - 1) {
-                    groupsql += ", ";
-                }
-            }
-            groupsql += ")";
-//            System.out.println(groupsql);
-
 
             NodeList summaryItemList = doc.getElementsByTagName("SummaryItem");
             String[] columnNames = new String[summaryItemList.getLength()];
@@ -66,7 +42,7 @@ public class QueryProcessing {
             }
 
 
-            String sql = "CREATE TABLE Summary" + " (";
+            String sql = "CREATE TABLE IF not EXISTS SUMMARY " + " (";
             for (int j = 0; j < columnNames.length; j++) {
                 sql += columnNames[j] + " " + columnTypes[j] + " " + columnProperties[j];
                 if (j < columnNames.length - 1) {
@@ -76,58 +52,20 @@ public class QueryProcessing {
             sql += ")";
             System.out.println(sql);
 
-//            String altersql="alter table Summary add constraint fk_group_id FOREIGN KEY (Group_id) REFERENCES GroupByMapping(id)";
-
-
-            NodeList logItemList = doc.getElementsByTagName("LogItem");
-            String[] logcolumnNames = new String[logItemList.getLength()];
-            String[] logcolumnTypes = new String[logItemList.getLength()];
-            String[] logcolumnProperties = new String[logItemList.getLength()];
-
-            for (int i = 0; i < logItemList.getLength(); i++) {
-                Element logItem = (Element) logItemList.item(i);
-                logcolumnNames[i] = logItem.getTextContent();
-                logcolumnTypes[i] = logItem.getAttribute("type");
-                logcolumnProperties[i] = logItem.getAttribute("property");
-//                System.out.println(logcolumnNames[i] + logcolumnTypes[i]+ logcolumnProperties[i]);
-            }
-
-
-            String logsql = "CREATE TABLE Logs" + " (";
-            for (int j = 0; j < logcolumnNames.length; j++) {
-                logsql += logcolumnNames[j] + " " + logcolumnTypes[j] + " " + logcolumnProperties[j];
-                if (j < logcolumnNames.length - 1) {
-                    logsql += ", ";
-                }
-            }
-            logsql += ")";
-//            System.out.println(logsql);
-            String alterlogsql = "alter table Logs add constraint fk_query_id FOREIGN KEY (Query_Id) REFERENCES Summary(Query_Id)";
-
 
             NodeList queryList = doc.getElementsByTagName("Query");
             String[] queryIdList = new String[queryList.getLength()];
-            String[] queryAggregateFunctionList = new String[queryList.getLength()];
             String[] queryFactVariableList = new String[queryList.getLength()];
-            String[] joinKeyList = new String[queryList.getLength()];
-            String[] tableList = new String[queryList.getLength()];
-            boolean[] hasGroupBy = new boolean[queryList.getLength()];
+            String[] queryTypeList = new String[queryList.getLength()];
+            String[] queryTableList = new String[queryList.getLength()];
 
-            for (int i = 0; i < queryList.getLength(); i++) {
-                Element query = (Element) queryList.item(i);
-                queryIdList[i] = query.getAttribute("id");
-                queryFactVariableList[i] = query.getElementsByTagName("FactVariable").item(0).getTextContent();
-                queryAggregateFunctionList[i] = query.getElementsByTagName("AggregateFunction").item(0).getTextContent();
-                if (query.getElementsByTagName("GroupBy").getLength() > 0) {
-                    hasGroupBy[i] = true;
-                    Element temp = (Element) query.getElementsByTagName("GroupBy").item(0);
-                    joinKeyList[i] = temp.getAttribute("join");
-                    tableList[i] = temp.getAttribute("table");
-                } else
-                    hasGroupBy[i] = false;
-//                System.out.println(queryIdList[i] +" "+queryFactVariableList[i]+" "+ queryAggregateFunctionList[i]+" "+hasGroupBy[i]);
+            for(int i=0;i<queryList.getLength();i++){
+                Element element=(Element) queryList.item(i);
+                queryIdList[i]=element.getAttribute("id");
+                queryFactVariableList[i] = element.getElementsByTagName("FactVariable").item(0).getTextContent();
+                queryTypeList[i]=queryIdList[i].charAt(0)=='a'?"Aggregate":"Generic";
+                queryTableList[i]="QUERY_RESULT_"+queryIdList[i];
             }
-
 
             String insert[] = new String[queryList.getLength()];
             String header = "";
@@ -136,147 +74,28 @@ public class QueryProcessing {
                 if (i < columnNames.length - 5)
                     header += ",";
             }
-//            System.out.println(header);
-            int groupById = 1;
-            for (int i = 0; i < insert.length; i++) {
-                if (!hasGroupBy[i])
-                    insert[i] = "INSERT INTO Summary (" + header + ") VALUES (" + queryIdList[i] + ",'" + queryFactVariableList[i] + "','" + queryAggregateFunctionList[i] + "')";
-                else {
-                    insert[i] = "INSERT INTO Summary (" + header + ",Group_Id,Join_Key,Table_Name) VALUES (" + queryIdList[i] + ",'" + queryFactVariableList[i] + "','" + queryAggregateFunctionList[i] + "'," + groupById + ",'" + joinKeyList[i] + "','" + tableList[i] + "')";
-                    groupById++;
-                }
-//                    System.out.println(insert[i]);
+            for(int i=0;i<insert.length;i++){
+                insert[i]="INSERT INTO SUMMARY VALUES ('"+queryIdList[i]+"','"+queryTypeList[i]+"','"+queryTableList[i]+"')";
+                System.out.println(insert[i]);
             }
-
-
-            List<String> insertGroupBy = new ArrayList<>();
-            List<String> createTable = new ArrayList<>();
-            List<String> insertGroupByResult = new ArrayList<>();
-            groupById = 1;
-            String groupHeader = "";
-            for (int i = 1; i < groupItemList.getLength(); i++) {
-                groupHeader += groupcolumnNames[i];
-                if (i < groupItemList.getLength() - 1) {
-                    groupHeader += ",";
-                }
-            }
-//            System.out.println(groupHeader);
-            for (int i = 0; i < hasGroupBy.length; i++) {
-                if (hasGroupBy[i]) {
-                    Element element = (Element) queryList.item(i);
-                    Element groupBy = (Element) element.getElementsByTagName("GroupBy").item(0);
-                    NodeList listOfGroup = groupBy.getElementsByTagName("Group");
-                    String temp = "Create Table GroupByResultQueryId_" + element.getAttribute("id") + " (";
-                    try (Connection conn = DriverManager.getConnection(url, username, password);
-                         Statement stmt = conn.createStatement();
-
-                    ) {
-//                    for(int j=0;j<hasGroupBy.length;j++){
-                        String select = "select ";
-                        for (int k = 0; k < listOfGroup.getLength(); k++) {
-                            select += listOfGroup.item(k).getTextContent();
-                            if (k < listOfGroup.getLength() - 1)
-                                select += ",";
-                        }
-                        select+= " from " + tableList[i] + " group by ";
-                        for (int k = 0; k < listOfGroup.getLength(); k++) {
-                            select += listOfGroup.item(k).getTextContent();
-                            if (k < listOfGroup.getLength() - 1)
-                                select += ",";
-                        }
-                        select += " order by ";
-                        for (int k = 0; k < listOfGroup.getLength(); k++) {
-                            select += listOfGroup.item(k).getTextContent();
-                            if (k < listOfGroup.getLength() - 1)
-                                select += ",";
-                        }
-                        System.out.println(select);
-                        ResultSet rs=stmt.executeQuery(select);
-                        ResultSetMetaData resultSetMetaData= rs.getMetaData();
-
-                        while (rs.next()){
-                            String temp2="INSERT INTO GroupByResultQueryId_" + element.getAttribute("id")+" VALUES (";
-                            for (int x=1;x<=resultSetMetaData.getColumnCount();x++){
-                                temp2+="'"+rs.getString(x)+"'";
-                                if(x<=resultSetMetaData.getColumnCount()-1)
-                                    temp2+=",";
-                            }
-                            temp2+=",0)";
-//                            System.out.println(temp2);
-                            insertGroupByResult.add(temp2);
-                        }
-//                    System.out.println(insert[i]);
-                    }
-//                }
-
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    for (int j = 0; j < listOfGroup.getLength(); j++) {
-                        insertGroupBy.add("INSERT INTO GroupByMapping (" + groupHeader + ") VALUES (" + groupById + ",'" + listOfGroup.item(j).getTextContent() + "')");
-                        temp += listOfGroup.item(j).getTextContent() + " VARCHAR(255) NOT NULL";
-                        temp += ",";
-                    }
-                    temp += " RESULT DECIMAL(15,5) DEFAULT 0)";
-                    createTable.add(temp);
-
-                    groupById++;
-                }
-            }
-
-
-            String minsql = "update Summary set Result=" + Integer.MAX_VALUE + " where Aggregate_Function='MIN'";
-            System.out.println(minsql);
-//            for(String s:insertGroupBy){
-//                System.out.println(s);
-//            }   for(String s:createTable){
-//                System.out.println(s);
-//            }
-
 
             try (Connection conn = DriverManager.getConnection(url, username, password);
                  Statement stmt = conn.createStatement();
             ) {
 
-                stmt.executeUpdate(groupsql);
-                System.out.println("[ Table GroupByMapping created successfully... ]");
-
-
                 stmt.executeUpdate(sql);
-                System.out.println("[ Table Summary created successfully... ]");
-
-//                stmt.executeUpdate(altersql);
-                stmt.executeUpdate(logsql);
-                System.out.println("[ Table Log created successfully... ]");
-
-                stmt.executeUpdate(alterlogsql);
-                for(int i=0;i<insert.length;i++){
-//                    System.out.println(insert[i]);
-                    stmt.executeUpdate(insert[i]);
-                }
-                for(int i=0;i<insertGroupBy.size();i++){
-                    System.out.println(insertGroupBy.get(i));
-                    stmt.executeUpdate(insertGroupBy.get(i));
-                }
-                for(int i=0;i<createTable.size();i++){
-                    System.out.println(createTable.get(i));
-                    stmt.executeUpdate(createTable.get(i));
-                }
-                stmt.executeUpdate(minsql);
-                for(int i=0;i<insertGroupByResult.size();i++){
-                    System.out.println(insertGroupByResult.get(i));
-                    stmt.executeUpdate(insertGroupByResult.get(i));
-                }
+              for(int i=0;i<insert.length;i++){
+                  stmt.executeUpdate(insert[i]);
+              }
 
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
-
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
-
 
     }
 }

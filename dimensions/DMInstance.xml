@@ -6,7 +6,7 @@
         <DataSource DS_id="DS-01">
           <WindowStorageProperties>
             <size units="rows">5</size>
-            <time units="seconds">60</time>
+            <time units="seconds">10</time>
             <velocity units="rows">3</velocity>
             <type>sliding</type>
             <origin>latest</origin>
@@ -34,34 +34,38 @@
       </DataSources>
     </StreamHub>
     <StreamProcessor>
-<!--      <Storageproperties>-->
-<!--        <Summary>-->
-<!--          <SummaryProperties>-->
-<!--            <SummaryItem type="INTEGER" property="PRIMARY KEY">Query_Id</SummaryItem>-->
-<!--            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</SummaryItem>-->
-<!--            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</SummaryItem>-->
-<!--            <SummaryItem type="INTEGER" property="">Group_Id</SummaryItem>-->
-<!--            <SummaryItem type="VARCHAR(255)" property="">Join_Key</SummaryItem>-->
-<!--            <SummaryItem type="VARCHAR(255)" property="">Table_Name</SummaryItem>-->
-<!--            <SummaryItem type="DECIMAL(15,5)" property="DEFAULT 0">Result</SummaryItem>-->
-<!--          </SummaryProperties>-->
-<!--          <GroupProperties>-->
-<!--            <GroupItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Id</GroupItem>-->
-<!--            <GroupItem type="INTEGER" property="NOT NULL">Group_Id</GroupItem>-->
-<!--            <GroupItem type="VARCHAR(255)" property="NOT NULL">Attribute</GroupItem>-->
-<!--          </GroupProperties>-->
-<!--        </Summary>-->
-<!--        <Log>-->
-<!--          <LogItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Log_Id</LogItem>-->
-<!--          <LogItem type="DATETIME" property="NOT NULL">TimeStamp</LogItem>-->
-<!--          <LogItem type="INTEGER" property="NOT NULL">Query_Id</LogItem>-->
-<!--          <LogItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</LogItem>-->
-<!--          <LogItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</LogItem>-->
-<!--          <LogItem type="DECIMAL(15,5)" property="NOT NULL">Window_Result</LogItem>-->
-<!--        </Log>-->
-<!--      </Storageproperties>-->
+      <Storageproperties>
+        <Summary>
+          <SummaryProperties>
+            <SummaryItem type="VARCHAR(255)" property="PRIMARY KEY">Query_Id</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Type</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Result_Table</SummaryItem>
+          </SummaryProperties>
+          <GroupProperties>
+            <GroupItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Id</GroupItem>
+            <GroupItem type="INTEGER" property="NOT NULL">Group_Id</GroupItem>
+            <GroupItem type="VARCHAR(255)" property="NOT NULL">Attribute</GroupItem>
+          </GroupProperties>
+        </Summary>
+        <Log>
+          <LogItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Log_Id</LogItem>
+          <LogItem type="DATETIME" property="NOT NULL">TimeStamp</LogItem>
+          <LogItem type="INTEGER" property="NOT NULL">Query_Id</LogItem>
+          <LogItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</LogItem>
+          <LogItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</LogItem>
+          <LogItem type="DECIMAL(15,5)" property="NOT NULL">Window_Result</LogItem>
+        </Log>
+      </Storageproperties>
       <QueryRepositories>
-        <QueryRepo type="aggregate">
+        <QueryRepo type="Aggregate">
+<!--          Performs all these aggregate operations on those fact variables-->
+          <AggregateFunctions>
+            <AggregateFunction>SUM</AggregateFunction>
+            <AggregateFunction>COUNT</AggregateFunction>
+            <AggregateFunction>AVG</AggregateFunction>
+            <AggregateFunction>MIN</AggregateFunction>
+            <AggregateFunction>MAX</AggregateFunction>
+          </AggregateFunctions>
           <Query id="a1">
             <FactVariable>SALE_UNITS</FactVariable>
           </Query>
@@ -80,10 +84,9 @@
           </Query>
           <Query id="q2">
             <AggregateFunction>COUNT</AggregateFunction>
-            <FactVariable>ORDER_VALUE</FactVariable>
-            <QueryScript>select CATEGORY, COUNT(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>
+            <FactVariable>SALE_UNITS</FactVariable>
+            <QueryScript>select CATEGORY, COUNT(SALE_UNITS) as result  from MergeView group by CATEGORY</QueryScript>
           </Query>
-<!--          Main Query-->
           <Query id="q3">
             <AggregateFunction>MIN</AggregateFunction>
             <FactVariable>SALE_UNITS</FactVariable>
@@ -94,8 +97,31 @@
             <FactVariable>SALE_UNITS</FactVariable>
             <QueryScript>select SALESPERSONTYPE, MAX(SALE_UNITS) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
           </Query>
+          <Query id="q5">
+            <AggregateFunction>MAX</AggregateFunction>
+            <FactVariable>ORDER_VALUE</FactVariable>
+            <QueryScript>select CUSTOMERCITY ,CUSTOMERTYPE  , MAX(ORDER_VALUE) as result  from MergeView group by CUSTOMERCITY ,CUSTOMERTYPE</QueryScript>
+          </Query>
+<!--          <Query id="q6">-->
+<!--            <AggregateFunction>AVG</AggregateFunction>-->
+<!--            <FactVariable>ORDER_VALUE</FactVariable>-->
+<!--            <QueryScript>select CATEGORY, AVG(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>-->
+<!--          </Query>-->
+<!--          <Query id="q7">-->
+<!--            <AggregateFunction>AVG</AggregateFunction>-->
+<!--            <FactVariable>COST_VALUE</FactVariable>-->
+<!--            <QueryScript>select SALESPERSONTYPE, AVG(COST_VALUE) as result  from MergeView group by SALESPERSONTYPE</QueryScript>-->
+<!--          </Query>-->
+
+          <!--  using WHERE clause      -->
+          <Query id="q8">
+            <AggregateFunction>MIN</AggregateFunction>
+            <FactVariable>COST_VALUE</FactVariable>
+            <QueryScript>select SALESPERSONTYPE, MIN(COST_VALUE) as result  from MergeView where SALESPERSONEXPERIENCE > 2 group by SALESPERSONTYPE</QueryScript>
+          </Query>
         </QueryRepo>
       </QueryRepositories>
+
     </StreamProcessor>
   </StreamProperties>
   <DWHProperties>
@@ -129,14 +155,28 @@
       <FactVariable>COST_VALUE</FactVariable>
       <FactVariable>SALE_UNITS</FactVariable>
     </FactVariables>
-<!--    <Facts>-->
-<!--      <Fact>-->
-<!--        <DimensionValue>string</DimensionValue>-->
-<!--        <FactVariable name="string">-4729239.7650942</FactVariable>-->
-<!--      </Fact>-->
-<!--    </Facts>-->
-<!--    <AggregateFunctions>-->
-<!--      <AggregateFunction>string</AggregateFunction>-->
-<!--    </AggregateFunctions>-->
+    <Facts>
+      <Fact>
+        <DimensionValue>string</DimensionValue>
+        <FactVariable name="string">-4729239.7650942</FactVariable>
+      </Fact>
+    </Facts>
+    <AggregateFunctions>
+      <AggregateFunction>string</AggregateFunction>
+    </AggregateFunctions>
+<!--    <QueryList>-->
+<!--      <Query id="01">-->
+<!--        <AggregateFunction>sum</AggregateFunction>-->
+<!--        <FactVariable>ORDER_VALUE</FactVariable>-->
+<!--      </Query>-->
+<!--      <Query id="02">-->
+<!--        <AggregateFunction>sum</AggregateFunction>-->
+<!--        <FactVariable>COST_VALUE</FactVariable>-->
+<!--      </Query>-->
+<!--      <Query id="03">-->
+<!--        <AggregateFunction>sum</AggregateFunction>-->
+<!--        <FactVariable>SALE_UNITS</FactVariable>-->
+<!--      </Query>-->
+<!--    </QueryList>-->
   </DWHProperties>
 </SDatabase>

@@ -133,7 +133,7 @@ public class NewStreamProcessing {
         Connection conn = DriverManager.getConnection(url,username,password);
         Statement dimensionTables = conn.createStatement();
         StringBuilder joinTables = new StringBuilder("");
-        ResultSet rsTables = dimensionTables.executeQuery("SELECT * FROM dimensiontables");
+        ResultSet rsTables = dimensionTables.executeQuery("SELECT * FROM DimensionTables");
         while (rsTables.next()) {
             String tableName = rsTables.getString("DimensionTable");
             joinTables.append(" NATURAL JOIN " + tableName);
