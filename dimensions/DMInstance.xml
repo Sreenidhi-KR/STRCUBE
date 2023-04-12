@@ -37,13 +37,9 @@
       <Storageproperties>
         <Summary>
           <SummaryProperties>
-            <SummaryItem type="INTEGER" property="PRIMARY KEY">Query_Id</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</SummaryItem>
-            <SummaryItem type="INTEGER" property="">Group_Id</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="">Join_Key</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="">Table_Name</SummaryItem>
-            <SummaryItem type="DECIMAL(15,5)" property="DEFAULT 0">Result</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="PRIMARY KEY">Query_Id</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Type</SummaryItem>
+            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Result_Table</SummaryItem>
           </SummaryProperties>
           <GroupProperties>
             <GroupItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Id</GroupItem>
