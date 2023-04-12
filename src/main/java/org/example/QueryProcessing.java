@@ -58,10 +58,11 @@ public class QueryProcessing {
             String[] queryFactVariableList = new String[queryList.getLength()];
             String[] queryTypeList = new String[queryList.getLength()];
             String[] queryTableList = new String[queryList.getLength()];
-
+            String[] queryLabelList = new String[queryList.getLength()];
             for(int i=0;i<queryList.getLength();i++){
                 Element element=(Element) queryList.item(i);
                 queryIdList[i]=element.getAttribute("id");
+                queryLabelList[i] = element.getElementsByTagName("QueryLabel").item(0).getTextContent();
                 queryFactVariableList[i] = element.getElementsByTagName("FactVariable").item(0).getTextContent();
                 queryTypeList[i]=queryIdList[i].charAt(0)=='a'?"Aggregate":"Generic";
                 queryTableList[i]="QUERY_RESULT_"+queryIdList[i];
@@ -75,7 +76,7 @@ public class QueryProcessing {
                     header += ",";
             }
             for(int i=0;i<insert.length;i++){
-                insert[i]="INSERT INTO SUMMARY VALUES ('"+queryIdList[i]+"','"+queryTypeList[i]+"','"+queryTableList[i]+"')";
+                insert[i]="INSERT INTO SUMMARY VALUES ('"+queryIdList[i]+"','"+queryTypeList[i]+"','"+queryLabelList[i]+"','"+queryTableList[i]+"')";
                 System.out.println(insert[i]);
             }
 
