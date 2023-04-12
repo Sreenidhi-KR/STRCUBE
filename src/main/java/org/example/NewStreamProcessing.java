@@ -112,14 +112,15 @@ public class NewStreamProcessing {
                 try {
                     int newRows=0;
                     newRows = SlidingWindow(conn, header, finalCsvFile, finalVelocity, finalSize, finalColumnTypes);
-
+                    System.out.println("New Lines Added: "+ newRows);
+                    if(newRows > 0) {
                     String createBaseViewQuery =
                     "CREATE OR REPLACE VIEW  MergeView as with filterFactTable as (select * , ROW_NUMBER()  OVER () AS rn from FactTable order by rn desc limit " + newRows+ ") Select * from filterFactTable "+joinTables;
                     System.out.println(createBaseViewQuery);
                     Statement createMergeViewStmt = conn.createStatement();
                     createMergeViewStmt.executeUpdate(createBaseViewQuery);
-                    System.out.println("New Lines Added: "+ newRows);
-                    summaryGeneration.generateSummary();
+                        summaryGeneration.generateSummary();
+                    }
 
                 } catch (IOException | SQLException e) {
                     throw new RuntimeException(e);

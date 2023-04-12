@@ -27,7 +27,7 @@ public class SummaryGeneration {
 
     private Connection conn;
 
-    public void updateQueryResult(String queryId, String aggregateFunction , ResultSet rs , Timestamp timestamp) throws SQLException {
+    public void updateQueryResult(String queryId, String aggregateFunction , ResultSet rs) throws SQLException {
         Statement stmt = conn.createStatement();
         String QUERY_TABLE_NAME = "QUERY_RESULT_"+queryId;
         ResultSetMetaData rsMetaData = rs.getMetaData();
@@ -90,7 +90,68 @@ public class SummaryGeneration {
 
             }
         }
-        generateLog(queryId,timestamp);
+    }
+
+    public void updateAggregationResult(String queryId , ResultSet rs ) throws SQLException {
+        Statement stmt = conn.createStatement();
+        String QUERY_TABLE_NAME = "QUERY_RESULT_"+queryId;
+        ResultSetMetaData rsMetaData = rs.getMetaData();
+        StringJoiner columnDefs = new StringJoiner(", ");
+
+        int columnCount = rsMetaData.getColumnCount();
+        String[] columnNames = new String[columnCount];
+        for (int i = 1; i <= columnCount; i++) {
+            columnNames[i - 1] = rsMetaData.getColumnName(i);
+            String name = rsMetaData.getColumnName(i);
+            String type = rsMetaData.getColumnTypeName(i);
+            if(type.contentEquals("BIGINT")){
+                columnDefs.add(name + " " + type + "( 20 )");
+            }
+            else {
+                columnDefs.add(name + " " + type + "( 20,3 )");
+            }
+        }
+
+        DatabaseMetaData metadata = conn.getMetaData();
+        ResultSet resultSet = metadata.getTables(null, null, QUERY_TABLE_NAME, null);
+        boolean tableExists = resultSet.next();
+        if(!tableExists){
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS " + QUERY_TABLE_NAME + " ( " + columnDefs + " )";
+            System.out.println(createTableQuery);
+            Statement stmtCreate = conn.createStatement();
+            stmtCreate.executeUpdate(createTableQuery);
+        }
+
+        if (rs.next()) {
+            String resultSum = rs.getString("sum");
+            String resultCount = rs.getString("count");
+            String resultMin = rs.getString("min");
+            String resultMax = rs.getString("max");
+            if(!tableExists) {
+                String updateStmt = "( ? , ? , ( ?/? ) , ? ,? )";
+                PreparedStatement stmtUpdate = conn.prepareStatement("INSERT INTO " + QUERY_TABLE_NAME + " VALUES " + updateStmt+"");
+                stmtUpdate.setInt(1, Integer.parseInt(resultSum));
+                stmtUpdate.setInt(2, Integer.parseInt(resultCount));
+                stmtUpdate.setInt(3, Integer.parseInt(resultSum));
+                stmtUpdate.setInt(4, Integer.parseInt(resultCount));
+                stmtUpdate.setInt(5, Integer.parseInt(resultMin));
+                stmtUpdate.setInt(6, Integer.parseInt(resultMax));
+                System.out.println(stmtUpdate);
+                stmtUpdate.executeUpdate();
+                return;
+            }
+            String updateStmt = "sum = ? + sum , count = ? + count ,avg = ?, min = LEAST(min , ?) , max = GREATEST(max,?) ";
+            PreparedStatement stmtUpdate = conn.prepareStatement("UPDATE " + QUERY_TABLE_NAME + " SET " + updateStmt+"");
+            stmtUpdate.setInt(1, Integer.parseInt(resultSum));
+            stmtUpdate.setInt(2, Integer.parseInt(resultCount));
+            stmtUpdate.setInt(3, 0);
+            stmtUpdate.setInt(4, Integer.parseInt(resultMin));
+            stmtUpdate.setInt(5, Integer.parseInt(resultMax));
+            System.out.println(stmtUpdate);
+            stmtUpdate.executeUpdate();
+            PreparedStatement stmtUpdateAvg = conn.prepareStatement("UPDATE " + QUERY_TABLE_NAME + " SET avg = (sum/count) ");
+            stmtUpdateAvg.executeUpdate();
+        }
     }
 
 
@@ -139,16 +200,10 @@ public class SummaryGeneration {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(inputFile);
             doc.getDocumentElement().normalize();
-
             NodeList queryNodes = doc.getElementsByTagName("Query");
-
             for (int i = 0; i < queryNodes.getLength(); i++) {
                 Element queryElem = (Element) queryNodes.item(i);
-                Element queryRepoElem = (Element) queryElem.getParentNode();
-                String queryRepoType = queryRepoElem.getAttribute("type");
-                if (queryRepoType.equals("generic")) {
-                    queries.add(queryElem);
-                }
+                queries.add(queryElem);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,17 +223,35 @@ public class SummaryGeneration {
             stmt = conn.createStatement();
             List<Element> queries = getQueries();
             for (Element query : queries) {
-                String queryId = query.getAttribute("id");
-                String aggregateFunction = query.getElementsByTagName("AggregateFunction").item(0).getTextContent();
-                String factVariable = query.getElementsByTagName("FactVariable").item(0).getTextContent();
-                String queryScript = query.getElementsByTagName("QueryScript").item(0).getTextContent();
-                System.out.println("Query ID: " + queryId);
-                System.out.println("Aggregate Function: " + aggregateFunction);
-                System.out.println("Fact Variable: " + factVariable);
-                System.out.println("Query Script: " + queryScript);
-                rs = stmt.executeQuery(queryScript);
-                summaryGeneration.updateQueryResult(queryId , aggregateFunction, rs , timestamp);
-                System.out.println();
+                Element queryRepoElem = (Element) query.getParentNode();
+                String queryRepoType = queryRepoElem.getAttribute("type");
+                if (queryRepoType.equals("generic")) {
+                    String queryId = query.getAttribute("id");
+                    String aggregateFunction = query.getElementsByTagName("AggregateFunction").item(0).getTextContent();
+                    String factVariable = query.getElementsByTagName("FactVariable").item(0).getTextContent();
+                    String queryScript = query.getElementsByTagName("QueryScript").item(0).getTextContent();
+                    System.out.println("Query ID: " + queryId);
+                    System.out.println("Aggregate Function: " + aggregateFunction);
+                    System.out.println("Fact Variable: " + factVariable);
+                    System.out.println("Query Script: " + queryScript);
+                    rs = stmt.executeQuery(queryScript);
+                    summaryGeneration.updateQueryResult(queryId, aggregateFunction, rs);
+                    summaryGeneration.generateLog(queryId, timestamp);
+                    System.out.println();
+                }
+                else if(queryRepoType.equals("aggregate")){
+                    String queryId = query.getAttribute("id");
+                    String factVariable = query.getElementsByTagName("FactVariable").item(0).getTextContent();
+                    System.out.println("Query ID: " + queryId);
+                    System.out.println("Aggregate Function: ALL" );
+                    System.out.println("Fact Variable: " + factVariable);
+                    Statement queryStmt = conn.createStatement();
+                    String queryScript = "SELECT SUM(" + factVariable + ") as sum, COUNT(" + factVariable + ") as count, AVG(" + factVariable + ") as avg, MIN(" + factVariable + ") as min, MAX(" + factVariable + ") as max FROM MergeView ;";
+                    ResultSet queryRs = queryStmt.executeQuery(queryScript);
+                    System.out.println(queryScript);
+                    summaryGeneration.updateAggregationResult(queryId, queryRs);
+
+                }
             }
 
         } catch (SQLException e) {

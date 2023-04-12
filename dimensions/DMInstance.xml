@@ -6,7 +6,7 @@
         <DataSource DS_id="DS-01">
           <WindowStorageProperties>
             <size units="rows">5</size>
-            <time units="seconds">10</time>
+            <time units="seconds">60</time>
             <velocity units="rows">3</velocity>
             <type>sliding</type>
             <origin>latest</origin>
@@ -34,49 +34,41 @@
       </DataSources>
     </StreamHub>
     <StreamProcessor>
-      <Storageproperties>
-        <Summary>
-          <SummaryProperties>
-            <SummaryItem type="INTEGER" property="PRIMARY KEY">Query_Id</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</SummaryItem>
-            <SummaryItem type="INTEGER" property="">Group_Id</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="">Join_Key</SummaryItem>
-            <SummaryItem type="VARCHAR(255)" property="">Table_Name</SummaryItem>
-            <SummaryItem type="DECIMAL(15,5)" property="DEFAULT 0">Result</SummaryItem>
-          </SummaryProperties>
-          <GroupProperties>
-            <GroupItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Id</GroupItem>
-            <GroupItem type="INTEGER" property="NOT NULL">Group_Id</GroupItem>
-            <GroupItem type="VARCHAR(255)" property="NOT NULL">Attribute</GroupItem>
-          </GroupProperties>
-        </Summary>
-        <Log>
-          <LogItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Log_Id</LogItem>
-          <LogItem type="DATETIME" property="NOT NULL">TimeStamp</LogItem>
-          <LogItem type="INTEGER" property="NOT NULL">Query_Id</LogItem>
-          <LogItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</LogItem>
-          <LogItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</LogItem>
-          <LogItem type="DECIMAL(15,5)" property="NOT NULL">Window_Result</LogItem>
-        </Log>
-      </Storageproperties>
+<!--      <Storageproperties>-->
+<!--        <Summary>-->
+<!--          <SummaryProperties>-->
+<!--            <SummaryItem type="INTEGER" property="PRIMARY KEY">Query_Id</SummaryItem>-->
+<!--            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</SummaryItem>-->
+<!--            <SummaryItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</SummaryItem>-->
+<!--            <SummaryItem type="INTEGER" property="">Group_Id</SummaryItem>-->
+<!--            <SummaryItem type="VARCHAR(255)" property="">Join_Key</SummaryItem>-->
+<!--            <SummaryItem type="VARCHAR(255)" property="">Table_Name</SummaryItem>-->
+<!--            <SummaryItem type="DECIMAL(15,5)" property="DEFAULT 0">Result</SummaryItem>-->
+<!--          </SummaryProperties>-->
+<!--          <GroupProperties>-->
+<!--            <GroupItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Id</GroupItem>-->
+<!--            <GroupItem type="INTEGER" property="NOT NULL">Group_Id</GroupItem>-->
+<!--            <GroupItem type="VARCHAR(255)" property="NOT NULL">Attribute</GroupItem>-->
+<!--          </GroupProperties>-->
+<!--        </Summary>-->
+<!--        <Log>-->
+<!--          <LogItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Log_Id</LogItem>-->
+<!--          <LogItem type="DATETIME" property="NOT NULL">TimeStamp</LogItem>-->
+<!--          <LogItem type="INTEGER" property="NOT NULL">Query_Id</LogItem>-->
+<!--          <LogItem type="VARCHAR(255)" property="NOT NULL">Fact_Variable</LogItem>-->
+<!--          <LogItem type="VARCHAR(255)" property="NOT NULL">Aggregate_Function</LogItem>-->
+<!--          <LogItem type="DECIMAL(15,5)" property="NOT NULL">Window_Result</LogItem>-->
+<!--        </Log>-->
+<!--      </Storageproperties>-->
       <QueryRepositories>
-        <QueryRepo type="Aggregate">
-<!--          Performs all these aggregate operations on those fact variables-->
-          <AggregateFunctions>
-            <AggregateFunction>SUM</AggregateFunction>
-            <AggregateFunction>COUNT</AggregateFunction>
-            <AggregateFunction>AVG</AggregateFunction>
-            <AggregateFunction>MIN</AggregateFunction>
-            <AggregateFunction>MAX</AggregateFunction>
-          </AggregateFunctions>
-          <Query id="1">
+        <QueryRepo type="aggregate">
+          <Query id="a1">
             <FactVariable>SALE_UNITS</FactVariable>
           </Query>
-          <Query id="2">
+          <Query id="a2">
             <FactVariable>COST_VALUE</FactVariable>
           </Query>
-          <Query id="3">
+          <Query id="a3">
             <FactVariable>ORDER_VALUE</FactVariable>
           </Query>
         </QueryRepo>
@@ -104,7 +96,6 @@
           </Query>
         </QueryRepo>
       </QueryRepositories>
-
     </StreamProcessor>
   </StreamProperties>
   <DWHProperties>
@@ -138,28 +129,14 @@
       <FactVariable>COST_VALUE</FactVariable>
       <FactVariable>SALE_UNITS</FactVariable>
     </FactVariables>
-    <Facts>
-      <Fact>
-        <DimensionValue>string</DimensionValue>
-        <FactVariable name="string">-4729239.7650942</FactVariable>
-      </Fact>
-    </Facts>
-    <AggregateFunctions>
-      <AggregateFunction>string</AggregateFunction>
-    </AggregateFunctions>
-<!--    <QueryList>-->
-<!--      <Query id="01">-->
-<!--        <AggregateFunction>sum</AggregateFunction>-->
-<!--        <FactVariable>ORDER_VALUE</FactVariable>-->
-<!--      </Query>-->
-<!--      <Query id="02">-->
-<!--        <AggregateFunction>sum</AggregateFunction>-->
-<!--        <FactVariable>COST_VALUE</FactVariable>-->
-<!--      </Query>-->
-<!--      <Query id="03">-->
-<!--        <AggregateFunction>sum</AggregateFunction>-->
-<!--        <FactVariable>SALE_UNITS</FactVariable>-->
-<!--      </Query>-->
-<!--    </QueryList>-->
+<!--    <Facts>-->
+<!--      <Fact>-->
+<!--        <DimensionValue>string</DimensionValue>-->
+<!--        <FactVariable name="string">-4729239.7650942</FactVariable>-->
+<!--      </Fact>-->
+<!--    </Facts>-->
+<!--    <AggregateFunctions>-->
+<!--      <AggregateFunction>string</AggregateFunction>-->
+<!--    </AggregateFunctions>-->
   </DWHProperties>
 </SDatabase>
