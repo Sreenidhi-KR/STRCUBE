@@ -27,7 +27,7 @@ public class SummaryGeneration {
 
     private Connection conn;
 
-    public void updateQueryResult(String queryId, String aggregateFunction , ResultSet rs) throws SQLException {
+    public void updateQueryResult(String queryId, String aggregateFunction , ResultSet rs, String queryScript) throws SQLException {
         Statement stmt = conn.createStatement();
         String QUERY_TABLE_NAME = "QUERY_RESULT_"+queryId;
         ResultSetMetaData rsMetaData = rs.getMetaData();
@@ -40,7 +40,12 @@ public class SummaryGeneration {
             String name = rsMetaData.getColumnName(i);
             String type = rsMetaData.getColumnTypeName(i);
             int length = rsMetaData.getColumnDisplaySize(i);
-            columnDefs.add(name + " " + type + "(" + length + ")");
+            if(type.contentEquals("DECIMAL")){
+                columnDefs.add(name + " " + type + "( 20,3 )");
+            }
+            else {
+                columnDefs.add(name + " " + type + "(" + length + ")");
+            }
         }
         String createTableQuery = "CREATE TABLE IF NOT EXISTS " + QUERY_TABLE_NAME + " ( id INT AUTO_INCREMENT PRIMARY KEY , " + columnDefs + ")";
         System.out.println(createTableQuery);
@@ -64,18 +69,36 @@ public class SummaryGeneration {
                     case "MIN" -> updateStmt = "Result = LEAST(Result , ?)";
                     case "MAX" -> updateStmt = "Result = GREATEST(Result , ?)";
                     case "AVG" -> {
-                        //TODO
-                        String todo;
+                        generateTempTables(queryId,queryScript);
+                        Double sum = 0.0, count =0.0 , avg;
+                        Statement getSumQuery = conn.createStatement();
+                        Statement getCountQuery = conn.createStatement();
+                        String tempSumTable = "QUERY_RESULT_ts"+queryId;
+                        String tempCountTable = "QUERY_RESULT_tc"+queryId;
+                        ResultSet rsSum = getSumQuery.executeQuery("SELECT result FROM " + tempSumTable + " WHERE " + getWhereClause(values, rs));
+                        ResultSet rsCount = getCountQuery.executeQuery("SELECT result FROM " + tempCountTable + " WHERE " + getWhereClause(values, rs));
+                        if(rsSum.next()){
+                            sum = Double.parseDouble(rsSum.getString("result"));
+                        }
+                        if(rsCount.next()){
+                            count= Double.parseDouble(rsCount.getString("result"));
+                        }
+                        avg = sum/count;
+                        System.out.println("AVG "+avg);
+                        result = String.valueOf(avg);
                         updateStmt = "Result = ?";
                     }
                 }
                 PreparedStatement stmtUpdate = conn.prepareStatement("UPDATE " + QUERY_TABLE_NAME + " SET " + updateStmt+" WHERE id=?");
-                stmtUpdate.setInt(1, Integer.parseInt(result));
+                stmtUpdate.setDouble(1, Double.parseDouble(result));
                 stmtUpdate.setInt(2, id);
                 System.out.println(stmtUpdate);
                 stmtUpdate.executeUpdate();
             } else {
                 System.out.println("Row not found in query table: ");
+                if(aggregateFunction.contentEquals("AVG")){
+                    generateTempTables(queryId,queryScript);
+                }
                 StringBuilder insertQuery = new StringBuilder("INSERT INTO " + QUERY_TABLE_NAME + " (" + String.join(", ", columnNames) + ") VALUES (");
                 for (int i = 0; i < values.length; i++) {
                     insertQuery.append("'").append(values[i]).append("'");
@@ -92,7 +115,20 @@ public class SummaryGeneration {
         }
     }
 
-    public void updateAggregationResult(String queryId , ResultSet rs ) throws SQLException {
+    public void generateTempTables(String queryId , String queryScript) throws SQLException {
+        System.out.println("START GENERATTING TEMP TABLES");
+        Statement tempSumStmt = conn.createStatement();
+        Statement tempCountStmt = conn.createStatement();
+        String tempSumQuery = queryScript.replace("AVG","SUM");
+        String tempCountQuery = queryScript.replace("AVG","COUNT");
+        ResultSet sumRs = tempSumStmt.executeQuery(tempSumQuery);
+        ResultSet countRs  = tempCountStmt.executeQuery(tempCountQuery);
+        updateQueryResult("ts"+queryId , "SUM",sumRs,tempSumQuery);
+        updateQueryResult("tc"+queryId , "COUNT",countRs,tempCountQuery);
+        System.out.println("FINISH GENERATTING TEMP TABLES");
+    }
+
+    public void updateAggregationResult(String queryId , ResultSet rs  ) throws SQLException {
         Statement stmt = conn.createStatement();
         String QUERY_TABLE_NAME = "QUERY_RESULT_"+queryId;
         ResultSetMetaData rsMetaData = rs.getMetaData();
@@ -235,7 +271,7 @@ public class SummaryGeneration {
                     System.out.println("Fact Variable: " + factVariable);
                     System.out.println("Query Script: " + queryScript);
                     rs = stmt.executeQuery(queryScript);
-                    summaryGeneration.updateQueryResult(queryId, aggregateFunction, rs);
+                    summaryGeneration.updateQueryResult(queryId, aggregateFunction, rs , queryScript);
                     summaryGeneration.generateLog(queryId, timestamp);
                     System.out.println();
                 }
