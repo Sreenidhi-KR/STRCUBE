@@ -51,17 +51,20 @@ public class SummaryGeneration {
         System.out.println(createTableQuery);
         Statement stmtCreate = conn.createStatement();
         stmtCreate.executeUpdate(createTableQuery);
-
+        System.out.println("RS = "+queryScript);
         while (rs.next()) {
             String[] values = new String[columnCount];
             for (int i = 0; i < values.length; i++) {
                 values[i] = rs.getString(i+1);
+                System.out.println("value "+(i+1)+" : " + values[i]);
             }
             System.out.println("SELECT * FROM " + QUERY_TABLE_NAME + " WHERE " + getWhereClause(values, rs));
             ResultSet rsOld = stmt.executeQuery("SELECT * FROM " + QUERY_TABLE_NAME + " WHERE " + getWhereClause(values, rs));
+            System.out.println("RSold");
             if (rsOld.next()) {
                 System.out.println("Row found in query table: ");
                 String result = rs.getString("result");
+                System.out.println(result);
                 int id = rsOld.getInt("id");
                 String updateStmt ="";
                 switch (aggregateFunction) {
@@ -69,7 +72,7 @@ public class SummaryGeneration {
                     case "MIN" -> updateStmt = "Result = LEAST(Result , ?)";
                     case "MAX" -> updateStmt = "Result = GREATEST(Result , ?)";
                     case "AVG" -> {
-                        generateTempTables(queryId,queryScript);
+                        generateTempTables(queryId,queryScript , getWhereClause(values , rs));
                         Double sum = 0.0, count =0.0 , avg;
                         Statement getSumQuery = conn.createStatement();
                         Statement getCountQuery = conn.createStatement();
@@ -84,6 +87,8 @@ public class SummaryGeneration {
                             count= Double.parseDouble(rsCount.getString("result"));
                         }
                         avg = sum/count;
+                        System.out.println("SUM "+sum);
+                        System.out.println("COUNT "+count);
                         System.out.println("AVG "+avg);
                         result = String.valueOf(avg);
                         updateStmt = "Result = ?";
@@ -97,7 +102,7 @@ public class SummaryGeneration {
             } else {
                 System.out.println("Row not found in query table: ");
                 if(aggregateFunction.contentEquals("AVG")){
-                    generateTempTables(queryId,queryScript);
+                    generateTempTables(queryId,queryScript , getWhereClause(values,rs));
                 }
                 StringBuilder insertQuery = new StringBuilder("INSERT INTO " + QUERY_TABLE_NAME + " (" + String.join(", ", columnNames) + ") VALUES (");
                 for (int i = 0; i < values.length; i++) {
@@ -115,14 +120,31 @@ public class SummaryGeneration {
         }
     }
 
-    public void generateTempTables(String queryId , String queryScript) throws SQLException {
+    public void generateTempTables(String queryId , String queryScript , String whereClause) throws SQLException {
         System.out.println("START GENERATTING TEMP TABLES");
         Statement tempSumStmt = conn.createStatement();
         Statement tempCountStmt = conn.createStatement();
-        String tempSumQuery = queryScript.replace("AVG","SUM");
-        String tempCountQuery = queryScript.replace("AVG","COUNT");
+        String tempSumQuery = queryScript.replace("AVG","SUM").toLowerCase();
+        String tempCountQuery = queryScript.replace("AVG","COUNT").toLowerCase();
+
+        String groupByKeyword = "group by";
+        int index = tempSumQuery.indexOf(groupByKeyword);
+        if (index != -1) {
+            index += tempSumQuery.substring(index).indexOf(groupByKeyword);
+            tempSumQuery = tempSumQuery.substring(0, index) + "WHERE " + whereClause + " " + tempSumQuery.substring(index);
+        }
+        index = tempCountQuery.indexOf(groupByKeyword);
+        if (index != -1) {
+            index += tempCountQuery.substring(index).indexOf(groupByKeyword);
+            tempCountQuery = tempCountQuery.substring(0, index) + "WHERE " + whereClause + " " + tempCountQuery.substring(index);
+        }
+
+        System.out.println("Start index of GROUP BY: " + index);
+        System.out.println(tempSumQuery);
+        System.out.println(tempCountQuery);
         ResultSet sumRs = tempSumStmt.executeQuery(tempSumQuery);
         ResultSet countRs  = tempCountStmt.executeQuery(tempCountQuery);
+
         updateQueryResult("ts"+queryId , "SUM",sumRs,tempSumQuery);
         updateQueryResult("tc"+queryId , "COUNT",countRs,tempCountQuery);
         System.out.println("FINISH GENERATTING TEMP TABLES");
