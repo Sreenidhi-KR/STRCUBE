@@ -6,7 +6,7 @@
         <DataSource DS_id="DS-01">
           <WindowStorageProperties>
             <size units="rows">5</size>
-            <time units="seconds">40</time>
+            <time units="seconds">20</time>
             <velocity units="rows">3</velocity>
             <type>sliding</type>
             <origin>latest</origin>
@@ -57,6 +57,7 @@
           <LogItem type="DECIMAL(15,5)" property="NOT NULL">Window_Result</LogItem>
         </Log>
       </Storageproperties>
+
       <QueryRepositories>
         <QueryRepo type="aggregate">
 <!--          Performs all these aggregate operations on those fact variables-->
@@ -114,16 +115,15 @@
            <Query id="q6">
              <AggregateFunction>AVG</AggregateFunction>-->
              <FactVariable>ORDER_VALUE</FactVariable>-->
-             <QueryScript>select CUSTOMERKEY, AVG(SALE_UNITS) as result  from MergeView group by CUSTOMERKEY</QueryScript>
+             <QueryScript>select CATEGORY, AVG(ORDER_VALUE) as result  from MergeView group by CATEGORY</QueryScript>
              <QueryLabel>Average Order Value with respect to Product Category</QueryLabel>
           </Query>
-<!--          <Query id="q7">-->
-<!--            <AggregateFunction>AVG</AggregateFunction>-->
-<!--            <FactVariable>COST_VALUE</FactVariable>-->
-<!--            <QueryScript>select SALESPERSONTYPE, AVG(COST_VALUE) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
-                <QueryLabel>Average Cost value with respect to Type of the Sales Person</QueryLabel>
--->
-<!--          </Query>-->
+          <Query id="q7">
+            <AggregateFunction>AVG</AggregateFunction>
+            <FactVariable>COST_VALUE</FactVariable>
+            <QueryScript>select SALESPERSONTYPE, AVG(COST_VALUE) as result  from MergeView group by SALESPERSONTYPE</QueryScript>
+            <QueryLabel>Average Cost value with respect to Type of the Sales Person</QueryLabel>
+          </Query>
 
           <!--  using WHERE clause      -->
           <Query id="q8">
@@ -138,6 +138,29 @@
     </StreamProcessor>
   </StreamProperties>
   <DWHProperties>
+    <DimensionalProperties>
+      <CuboidProperties>
+        <CuboidType>Iceberg Cuboid</CuboidType>
+        <AggregateFunctions>
+          <AggregateFunction>SUM</AggregateFunction>
+          <AggregateFunction>COUNT</AggregateFunction>
+          <AggregateFunction>AVG</AggregateFunction>
+          <AggregateFunction>MIN</AggregateFunction>
+          <AggregateFunction>MAX</AggregateFunction>
+        </AggregateFunctions>
+        <Dimensions>
+          <Dimension>CATEGORY</Dimension>
+          <Dimension>MONTH</Dimension>
+          <Dimension>YEAR</Dimension>
+          <Dimension>WEEKDAY</Dimension>
+          <Dimension>CUSTOMERCITY</Dimension>
+          <Dimension>CUSTOMERTYPE</Dimension>
+          <Dimension>SALESPERSONTYPE</Dimension>
+        </Dimensions>
+        <ComputeType>Auto-Compute</ComputeType>
+        <QueryProcessing>Auto-Process</QueryProcessing>
+      </CuboidProperties>
+    </DimensionalProperties>
     <DimensionTables>
       <DimensionTable name="PRODUCT">
         <DimensionVariable type="VARCHAR(255)" property="PRIMARY KEY">PRODUCTKEY</DimensionVariable>

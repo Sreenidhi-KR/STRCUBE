@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated: DMInstance.xml to add QUERY LABELS">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="7b59d7af-6927-4048-8da1-649728047503" name="Changes" comment="Updated: Added Functionality ti Include QUERY LABELS">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1881364c-15c4-41f4-9ac2-ee6bd9a5f78f.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dimensions/DMInstance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dimensions/DMInstance.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/QueryProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/QueryProcessing.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +123,13 @@
       <workItem from="1681287627176" duration="673000" />
       <workItem from="1681288424791" duration="59000" />
       <workItem from="1681306131376" duration="59000" />
-      <workItem from="1681307567338" duration="4451000" />
+      <workItem from="1681307567338" duration="4494000" />
+      <workItem from="1681318733866" duration="1213000" />
+      <workItem from="1681322406036" duration="1983000" />
+      <workItem from="1681359197937" duration="4181000" />
+      <workItem from="1681619914932" duration="856000" />
+      <workItem from="1681707698163" duration="2523000" />
+      <workItem from="1681881877268" duration="2339000" />
     </task>
     <task id="LOCAL-00001" summary="README.md">
       <created>1679554747117</created>
@@ -239,7 +243,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681310952933</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Updated: Added Functionality ti Include QUERY LABELS">
+      <created>1681317583328</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1681317583328</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -271,6 +282,7 @@
     <MESSAGE value="Updated: DMInstance.xml to modify aggregate queries" />
     <MESSAGE value="Updated: DMInstance.xml TO GENERATE SUMMARY TABLE" />
     <MESSAGE value="Updated: DMInstance.xml to add QUERY LABELS" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated: DMInstance.xml to add QUERY LABELS" />
+    <MESSAGE value="Updated: Added Functionality ti Include QUERY LABELS" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated: Added Functionality ti Include QUERY LABELS" />
   </component>
 </project>
