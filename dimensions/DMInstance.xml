@@ -152,11 +152,12 @@
           <Dimension>CATEGORY</Dimension>
           <Dimension>MONTH</Dimension>
           <Dimension>YEAR</Dimension>
-          <Dimension>WEEKDAY</Dimension>
-          <Dimension>CUSTOMERCITY</Dimension>
-          <Dimension>CUSTOMERTYPE</Dimension>
-          <Dimension>SALESPERSONTYPE</Dimension>
         </Dimensions>
+        <FactVariables>
+          <FactVariable>ORDER_VALUE</FactVariable>
+          <FactVariable>COST_VALUE</FactVariable>
+          <FactVariable>SALE_UNITS</FactVariable>
+        </FactVariables>
         <ComputeType>Auto-Compute</ComputeType>
         <QueryProcessing>Auto-Process</QueryProcessing>
       </CuboidProperties>

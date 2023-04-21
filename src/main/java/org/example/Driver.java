@@ -11,6 +11,8 @@ public class Driver {
         Dimproc.GenerateDTs(dimensionsDirectory, xmlFileName);
         FactTableProcessing factTableProcessing=new FactTableProcessing();
         factTableProcessing.GenerateFT(dimensionsDirectory,xmlFileName);
+        CubeProcessing cubeProcessing = new CubeProcessing();
+        cubeProcessing.start(dimensionsDirectory+xmlFileName);
         QueryProcessing queryProcessing=new QueryProcessing();
         queryProcessing.GenerateSummary();
 //        StreamProcessing streamProcessing = new StreamProcessing();
