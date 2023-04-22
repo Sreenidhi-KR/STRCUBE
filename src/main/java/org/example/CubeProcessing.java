@@ -5,8 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,8 +16,6 @@ import org.w3c.dom.NodeList;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
-import java.util.Set;
 
 
 public class CubeProcessing {
@@ -95,6 +92,7 @@ public class CubeProcessing {
                 Element dim = (Element) dimList.item(i);
                 String dimValue = dim.getTextContent();
                 dimensionsArray.add(dimValue);
+                Collections.sort(dimensionsArray);
                 System.out.println(dimValue);
             }
 
@@ -116,6 +114,13 @@ public class CubeProcessing {
 
             ArrayList<String> dimCombinationsList = generateCombinations(dimensionsArray);
 
+            System.out.println("Combinations LIST");
+            for(String dm : dimCombinationsList){
+
+                System.out.println(dm);
+            }
+
+
             try (Connection conn = DriverManager.getConnection(url, username, password);
                  Statement stmt = conn.createStatement()) {
 
@@ -134,7 +139,7 @@ public class CubeProcessing {
                             root.appendChild(xmlQuery);
                             String tableName = "CubeSummary";
                             String sql = "INSERT INTO " + tableName +
-                                    "(qid, hash)  VALUES ( ' " + queryId + " ' , ' " + hash + "' )";
+                                    "(qid, hash)  VALUES ( '" + queryId + "' , '" + hash +"' )";
                             System.out.println(sql);
                             stmt.addBatch(sql);
                             i++;
@@ -197,14 +202,22 @@ public class CubeProcessing {
 
     public static String generateHash(String dimCombination, String aggregateFunction , String factV) throws NoSuchAlgorithmException {
 
-        Set<String> mySet = new HashSet<>();
-        if(dimCombination.length() >0) {
-            mySet.add(dimCombination);
+//        Set<String> mySet = new HashSet<>();
+//        if(dimCombination.length() >0) {
+//            mySet.add(dimCombination);
+//        }
+//        mySet.add(aggregateFunction);
+//        mySet.add(factV);
+
+        String concatenated = "";
+        if(dimCombination.length() > 0){
+            concatenated = String.join(",",aggregateFunction , factV , dimCombination);
         }
-        mySet.add(aggregateFunction);
-        mySet.add(factV);
-        String concatenated = String.join(",", mySet); // Join the strings with a comma delimiter
-        //System.out.println("concatenated string required for hash "+ concatenated);
+        else{
+            concatenated = String.join(",",aggregateFunction , factV );
+        }
+          // Join the strings with a comma delimiter
+        System.out.println("concatenated string required for hash "+ concatenated);
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashBytes = md.digest(concatenated.getBytes());
 

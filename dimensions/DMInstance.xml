@@ -150,8 +150,8 @@
         </AggregateFunctions>
         <Dimensions>
           <Dimension>CATEGORY</Dimension>
-          <Dimension>MONTH</Dimension>
           <Dimension>YEAR</Dimension>
+          <Dimension>MONTH</Dimension>
         </Dimensions>
         <FactVariables>
           <FactVariable>ORDER_VALUE</FactVariable>
