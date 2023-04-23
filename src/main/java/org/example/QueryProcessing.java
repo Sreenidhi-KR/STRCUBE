@@ -20,7 +20,7 @@ public class QueryProcessing {
 
     public QueryProcessing() {
     }
-    public void GenerateSummary() {
+    public void generateSummaryTable() {
         try{
             File inputFile = new File("./dimensions/DMInstance.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

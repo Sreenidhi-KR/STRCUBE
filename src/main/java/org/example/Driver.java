@@ -14,7 +14,7 @@ public class Driver {
         CubeProcessing cubeProcessing = new CubeProcessing();
         cubeProcessing.start(dimensionsDirectory+xmlFileName);
         QueryProcessing queryProcessing=new QueryProcessing();
-        queryProcessing.GenerateSummary();
+        queryProcessing.generateSummaryTable();
 //        StreamProcessing streamProcessing = new StreamProcessing();
 //        streamProcessing.start(factsDirectory,dimensionsDirectory,xmlFileName);
         /* Sliding Window Implementation... */
