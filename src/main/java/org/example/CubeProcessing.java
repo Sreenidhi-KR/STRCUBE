@@ -202,13 +202,6 @@ public class CubeProcessing {
 
     public static String generateHash(String dimCombination, String aggregateFunction , String factV) throws NoSuchAlgorithmException {
 
-//        Set<String> mySet = new HashSet<>();
-//        if(dimCombination.length() >0) {
-//            mySet.add(dimCombination);
-//        }
-//        mySet.add(aggregateFunction);
-//        mySet.add(factV);
-
         String concatenated = "";
         if(dimCombination.length() > 0){
             concatenated = String.join(",",aggregateFunction , factV , dimCombination);
@@ -216,7 +209,6 @@ public class CubeProcessing {
         else{
             concatenated = String.join(",",aggregateFunction , factV );
         }
-          // Join the strings with a comma delimiter
         System.out.println("concatenated string required for hash "+ concatenated);
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashBytes = md.digest(concatenated.getBytes());
@@ -230,45 +222,6 @@ public class CubeProcessing {
         //System.out.println(hash);
         return hash;
 
-    }
-
-    public static void generateXML(String[] args) {
-        try {
-            // Create a new DocumentBuilderFactory
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-            // Use the factory to create a new DocumentBuilder
-            DocumentBuilder builder = factory.newDocumentBuilder();
-
-            // Create a new Document
-            Document doc = builder.newDocument();
-
-            // Create root element
-            Element root = doc.createElement("Queries");
-            doc.appendChild(root);
-
-            // Create first Query element
-//            Element query1 = createQueryElement(doc, "q8", "MIN", "COST_VALUE",
-//                    new String[]{"SALESPERSONTYPE", "CATEGORY"},
-//                    "select SALESPERSONTYPE, MIN(COST_VALUE) as result  from MergeView where SALESPERSONEXPERIENCE > 2 group by SALESPERSONTYPE",
-//                    "Minimum Cost Value with respect to Type of the Sales Person where Sales Person with Experience more than 2 years to be considered.");
-//            root.appendChild(query1);
-//
-//            // Create second Query element
-//            Element query2 = createQueryElement(doc, "q9", "MAX", "SALES_VALUE",
-//                    new String[]{"SALESPERSONTYPE", "PRODUCT"},
-//                    "select SALESPERSONTYPE, MAX(SALES_VALUE) as result from MergeView where PRODUCT_CATEGORY = 'Electronics' group by SALESPERSONTYPE",
-//                    "Maximum Sales Value with respect to Type of the Sales Person for Electronics category products.");
-//            root.appendChild(query2);
-
-            // Write the content into XML file
-            File file = new File("example.xml");
-            javax.xml.transform.TransformerFactory.newInstance().newTransformer()
-                    .transform(new javax.xml.transform.dom.DOMSource(doc),
-                            new javax.xml.transform.stream.StreamResult(file));
-        } catch (ParserConfigurationException | javax.xml.transform.TransformerException e) {
-            e.printStackTrace();
-        }
     }
 
     private static Element createQueryElement(Document doc, String id, String hash, String aggFunction, String factVariable,
