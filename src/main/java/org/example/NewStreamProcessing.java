@@ -32,7 +32,7 @@ public class NewStreamProcessing {
         String csvPath = "";
         File csvFile = null;
         String[] columnTypes = null;
-        SummaryGeneration summaryGeneration = new SummaryGeneration();
+        QueriesProcessing queriesProcessing = new QueriesProcessing();
         // Process XML Instance & Get DataSource Properties
         try {
             File inputFile = new File(dimensionDir+xmlFileName);
@@ -119,7 +119,7 @@ public class NewStreamProcessing {
                     System.out.println(createBaseViewQuery);
                     Statement createMergeViewStmt = conn.createStatement();
                     createMergeViewStmt.executeUpdate(createBaseViewQuery);
-                        summaryGeneration.generateSummary();
+                        queriesProcessing.generateSummary();
                     }
 
                 } catch (IOException | SQLException e) {

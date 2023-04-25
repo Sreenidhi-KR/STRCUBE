@@ -12,15 +12,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class QueryProcessing {
+public class SummaryTableGeneration {
     DBConfig dbConfig = new DBConfig();
     String url = dbConfig.getUrl();
     String username = dbConfig.getUsername();
     String password = dbConfig.getPassword();
 
-    public QueryProcessing() {
+    public SummaryTableGeneration() {
     }
-    public void generateSummaryTable() {
+    public void createSummaryTable() {
         try{
             File inputFile = new File("./dimensions/DMInstance.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

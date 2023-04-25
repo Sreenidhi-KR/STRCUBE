@@ -53,6 +53,9 @@ public class CubeProcessing {
             ArrayList<String> aggregateFunctionsArray = new ArrayList<String>();
             ArrayList<String> factVariablesArray = new ArrayList<String>();
 
+
+            //Fetching Data from XML
+
             // Get the CuboidProperties element
             Element cuboidProps = (Element) doc.getElementsByTagName("CuboidProperties").item(0);
 
@@ -92,8 +95,8 @@ public class CubeProcessing {
                 Element dim = (Element) dimList.item(i);
                 String dimValue = dim.getTextContent();
                 dimensionsArray.add(dimValue);
-                Collections.sort(dimensionsArray);
                 System.out.println(dimValue);
+                Collections.sort(dimensionsArray);
             }
 
             System.out.println("\nList of Aggregate Functions:");

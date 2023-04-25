@@ -10,7 +10,7 @@ public class STRCUBEInitialization {
 
         String dimensionsDirectory = "./dimensions/";
         String xmlFileName = "DMInstance.xml";
-        dropDatabase("STRCUBE");
+        dropDatabase("DataModeling");
         DimensionalProcessing Dimproc = new DimensionalProcessing();
         Dimproc.CreateMetaDT();
         Dimproc.GenerateDTs(dimensionsDirectory, xmlFileName);
@@ -18,8 +18,8 @@ public class STRCUBEInitialization {
         factTableProcessing.GenerateFT(dimensionsDirectory,xmlFileName);
         CubeProcessing cubeProcessing = new CubeProcessing();
         cubeProcessing.start(dimensionsDirectory+xmlFileName);
-        QueryProcessing queryProcessing=new QueryProcessing();
-        queryProcessing.generateSummaryTable();
+        SummaryTableGeneration summaryTableGeneration =new SummaryTableGeneration();
+        summaryTableGeneration.createSummaryTable();
     }
     public static void dropDatabase(String dbName){
         DBConfig dbConfig=new DBConfig();

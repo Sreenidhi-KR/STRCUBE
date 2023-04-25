@@ -12,16 +12,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 
-public class SummaryGeneration {
+public class QueriesProcessing {
     public static DBConfig dbConfig = new DBConfig();
     public static String url = dbConfig.getUrl();
     public static String username = dbConfig.getUsername();
     public static String password = dbConfig.getPassword();
 
-    public SummaryGeneration() {
+    public QueriesProcessing() {
     }
 
-    public SummaryGeneration(Connection conn) {
+    public QueriesProcessing(Connection conn) {
         this.conn = conn;
     }
 
@@ -35,6 +35,8 @@ public class SummaryGeneration {
 
         int columnCount = rsMetaData.getColumnCount();
         String[] columnNames = new String[columnCount];
+
+        //To get metadata for creating table
         for (int i = 1; i <= columnCount; i++) {
             columnNames[i - 1] = rsMetaData.getColumnName(i);
             String name = rsMetaData.getColumnName(i);
@@ -53,11 +55,13 @@ public class SummaryGeneration {
         System.out.println("RS = " + queryScript);
         while (rs.next()) {
             String[] values = new String[columnCount];
+            //getting current row values
             for (int i = 0; i < values.length; i++) {
                 values[i] = rs.getString(i + 1);
                 System.out.println("value " + (i + 1) + " : " + values[i]);
             }
-            System.out.println("SELECT * FROM " + QUERY_TABLE_NAME + " WHERE " + getWhereClause(values, rs));
+             //System.out.println("SELECT * FROM " + QUERY_TABLE_NAME + " WHERE " + getWhereClause(values, rs));
+            //This will generate a where clause basically all values with column name ex C1 = "a" and C2 ="b"
             String whereCondition = getWhereClause(values, rs);
             ResultSet rsOld;
             if(whereCondition.length() > 0){
@@ -66,8 +70,7 @@ public class SummaryGeneration {
             else{
                 rsOld = stmt.executeQuery("SELECT * FROM " + QUERY_TABLE_NAME );
             }
-
-            System.out.println("RSold");
+            //check if a row exists with where condition
             if (rsOld.next()) {
                 System.out.println("Row found in query table: ");
                 String result = rs.getString("result");
@@ -88,6 +91,7 @@ public class SummaryGeneration {
                         String whereClause = getWhereClause(values, rs);
                         ResultSet rsSum = null;
                         ResultSet rsCount = null;
+                        //Matching row from sum and count table
                         if(whereClause.length() > 0){
                             rsSum = getSumQuery.executeQuery("SELECT result FROM " + tempSumTable + " WHERE " + getWhereClause(values, rs));
                             rsCount = getCountQuery.executeQuery("SELECT result FROM " + tempCountTable + " WHERE " + getWhereClause(values, rs));
@@ -144,6 +148,8 @@ public class SummaryGeneration {
         String tempSumQuery = queryScript.replace("AVG", "SUM").toLowerCase();
         String tempCountQuery = queryScript.replace("AVG", "COUNT").toLowerCase();
 
+
+        //adding where clause before group by script
         String groupByKeyword = "group by";
         int index = tempSumQuery.indexOf(groupByKeyword);
         if (index != -1) {
@@ -175,6 +181,7 @@ public class SummaryGeneration {
 
         int columnCount = rsMetaData.getColumnCount();
         String[] columnNames = new String[columnCount];
+        //getting metadata for table creation
         for (int i = 1; i <= columnCount; i++) {
             columnNames[i - 1] = rsMetaData.getColumnName(i);
             String name = rsMetaData.getColumnName(i);
@@ -254,6 +261,7 @@ public class SummaryGeneration {
 
 
     private String getWhereClause(String[] values, ResultSet rsNew) throws SQLException {
+        //This will generate a where clause basically all values with column name ex C1 = "a" and C2 ="b"
         StringBuilder whereClause = new StringBuilder();
         for (int i = 0; i < values.length; i++) {
             String columnName = rsNew.getMetaData().getColumnName(i + 1);
@@ -292,7 +300,7 @@ public class SummaryGeneration {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         try {
             conn = DriverManager.getConnection(url, username, password);
-            SummaryGeneration summaryGeneration = new SummaryGeneration(conn);
+            QueriesProcessing queriesProcessing = new QueriesProcessing(conn);
             stmt = conn.createStatement();
             List<Element> queries = getQueries("./dimensions/DMInstance.xml");
             for (Element query : queries) {
@@ -308,8 +316,8 @@ public class SummaryGeneration {
                     System.out.println("Fact Variable: " + factVariable);
                     System.out.println("Query Script: " + queryScript);
                     rs = stmt.executeQuery(queryScript);
-                    summaryGeneration.updateQueryResult(queryId, aggregateFunction, rs, queryScript);
-                    summaryGeneration.generateLog(queryId, timestamp);
+                    queriesProcessing.updateQueryResult(queryId, aggregateFunction, rs, queryScript);
+                    queriesProcessing.generateLog(queryId, timestamp);
                     System.out.println();
                 } else if (queryRepoType.equals("aggregate")) {
                     String queryId = query.getAttribute("id");
@@ -321,8 +329,8 @@ public class SummaryGeneration {
                     String queryScript = "SELECT SUM(" + factVariable + ") as sum, COUNT(" + factVariable + ") as count, AVG(" + factVariable + ") as avg, MIN(" + factVariable + ") as min, MAX(" + factVariable + ") as max FROM MergeView ;";
                     ResultSet queryRs = queryStmt.executeQuery(queryScript);
                     System.out.println(queryScript);
-                    summaryGeneration.updateAggregationResult(queryId, queryRs);
-                    summaryGeneration.generateLog(queryId, timestamp);
+                    queriesProcessing.updateAggregationResult(queryId, queryRs);
+                    queriesProcessing.generateLog(queryId, timestamp);
                 }
             }
             List<Element> cubeQueries = getQueries("./dimensions/Cuboids.xml");
@@ -336,8 +344,8 @@ public class SummaryGeneration {
                 System.out.println("Fact Variable: " + factVariable);
                 System.out.println("Query Script: " + queryScript);
                 rs = stmt.executeQuery(queryScript);
-                summaryGeneration.updateQueryResult(queryId, aggregateFunction, rs, queryScript);
-                summaryGeneration.generateLog(queryId, timestamp);
+                queriesProcessing.updateQueryResult(queryId, aggregateFunction, rs, queryScript);
+                queriesProcessing.generateLog(queryId, timestamp);
                 System.out.println();
             }
 
