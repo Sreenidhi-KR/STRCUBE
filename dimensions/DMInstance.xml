@@ -42,11 +42,6 @@
             <SummaryItem type="VARCHAR(255)" property="NOT NULL">Query</SummaryItem>
             <SummaryItem type="VARCHAR(255)" property="NOT NULL">Result_Table</SummaryItem>
           </SummaryProperties>
-          <GroupProperties>
-            <GroupItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Id</GroupItem>
-            <GroupItem type="INTEGER" property="NOT NULL">Group_Id</GroupItem>
-            <GroupItem type="VARCHAR(255)" property="NOT NULL">Attribute</GroupItem>
-          </GroupProperties>
         </Summary>
         <Log>
           <LogItem type="INTEGER" property="PRIMARY KEY AUTO_INCREMENT">Log_Id</LogItem>
@@ -132,6 +127,18 @@
             <QueryScript>select SALESPERSONTYPE, MIN(COST_VALUE) as result  from MergeView where SALESPERSONEXPERIENCE > 2 group by SALESPERSONTYPE</QueryScript>
             <QueryLabel>Minimum Cost Value with respect to Type of the Sales Person where Sales Person with Experience more than 2 years to be considered.</QueryLabel>
           </Query>
+          <Query id="q9">
+            <AggregateFunction>MIN</AggregateFunction>
+            <FactVariable>COST_VALUE</FactVariable>
+            <QueryScript>select SALESPERSONTYPE, SALESPERSONEXPERIENCE, MIN(COST_VALUE) as result  from MergeView group by SALESPERSONTYPE, SALESPERSONEXPERIENCE having SALESPERSONEXPERIENCE > 2</QueryScript>
+            <QueryLabel>Minimum Cost Value with respect to Type of the Sales Person and Experience where Sales Person with Experience more than 2 years to be considered.</QueryLabel>
+          </Query>
+<!--          <Query id="q9">-->
+<!--            <AggregateFunction>AVG</AggregateFunction>-->
+<!--            <FactVariable>SALE_UNITS</FactVariable>-->
+<!--            <QueryScript>select MONTH, WEEKDAY, AVG(SALE_UNITS) as result  from MergeView where YEAR = 2015 and DAY BETWEEN 1 AND 15 group by MONTH, WEEKDAY having WEEKDAY = 1 or WEEKDAY = 7</QueryScript>-->
+<!--            <QueryLabel>Average Sale Units of first 15 Days of a Month and of year 2015 with respect to Month and first or last Week Day.</QueryLabel>-->
+<!--          </Query>-->
         </QueryRepo>
       </QueryRepositories>
 
@@ -152,6 +159,9 @@
           <Dimension>CATEGORY</Dimension>
           <Dimension>YEAR</Dimension>
           <Dimension>MONTH</Dimension>
+          <Dimension>WEEKDAY</Dimension>
+          <Dimension>SALESPERSONTYPE</Dimension>
+          <Dimension>CUSTOMERTYPE</Dimension>
         </Dimensions>
         <FactVariables>
           <FactVariable>ORDER_VALUE</FactVariable>
